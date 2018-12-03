@@ -10,7 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "@types/node": "^10.12.11",
-    "bootstrap": "^4.0.0-alpha.6",
+    "bootstrap": "^4.1.2",
     "color": "^3.1.0",
     "is-color": "^1.0.2",
     "node-sass": "^4.10.0",
