@@ -1,0 +1,4 @@
+s {
+  background: var(--red, #ff0000);
+  background: var(--darkRed, #eb0000);
+  background: var(--DNRed, #990000); }

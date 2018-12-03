@@ -1,0 +1,3933 @@
+// Variables
+//
+// Copy settings from this file into the provided `_custom.scss` to override
+// the Bootstrap defaults without modifying key, versioned files.
+
+
+// Table of Contents
+//
+// Colors
+// Options
+// Spacing
+// Body
+// Links
+// Grid breakpoints
+// Grid containers
+// Grid columns
+// Fonts
+// Components
+// Tables
+// Buttons
+// Forms
+// Dropdowns
+// Z-index master list
+// Navbar
+// Navs
+// Pagination
+// Jumbotron
+// Form states and alerts
+// Cards
+// Tooltips
+// Popovers
+// Badges
+// Modals
+// Alerts
+// Progress bars
+// List group
+// Image thumbnails
+// Figures
+// Breadcrumbs
+// Carousel
+// Close
+// Code
+
+@mixin _assert-ascending($map, $map-name) {
+  $prev-key: null;
+  $prev-num: null;
+  @each $key, $num in $map {
+    @if $prev-num == null {
+      // Do nothing
+    } @else if not comparable($prev-num, $num) {
+      @warn "Potentially invalid value for #{$map-name}#{$key}#{$num}#{$prev-num}#{$prev-key}";
+    } @else if $prev-num >= $num {
+      @warn "Invalid value for #{$map-name}#{$key}#{$num}#{$prev-num}#{$prev-key}";
+    }
+    $prev-key:$key;
+
+    $prev-num:$num;
+
+  }
+}
+
+// Replace `$search` with `$replace` in `$string`
+// @author Hugo Giraudel
+// @param {String} $string - Initial string
+// @param {String} $search - Substring to replace
+// @param {String} $replace ('') - New value
+// @return {String} - Updated string
+@function str-replace($string, $search, $replace: "") {
+  $index: str-index($string, $search);
+
+  @if $index {
+    @return str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+  }
+
+  @return $string;
+}
+
+@mixin _assert-starts-at-zero($map) {
+  $values: map-values($map);
+  $first-value: nth($values, 1);
+  @if $first-value != 0 {
+    @warn "First breakpoint in `$grid-breakpoints` must start at 0, but starts at #{$first-value}";
+  }
+}
+
+
+// General variable structure
+//
+// Variable format should follow the `$component-modifier-state-property` order.
+
+
+// Colors
+//
+// Grayscale and brand colors for use across Bootstrap.
+
+// Start with assigning color names to specific hex values.
+$white:#fff ;
+$white-R:red(#fff )!default;
+$white-G:green(#fff )!default;
+$white-B:blue(#fff )!default;
+$white-H:hue(#fff )!default;
+$white-S:saturation(#fff )!default;
+$white-L:lightness(#fff )!default;
+$white-A:alpha(#fff )!default;
+
+$black:#000 ;
+$black-R:red(#000 )!default;
+$black-G:green(#000 )!default;
+$black-B:blue(#000 )!default;
+$black-H:hue(#000 )!default;
+$black-S:saturation(#000 )!default;
+$black-L:lightness(#000 )!default;
+$black-A:alpha(#000 )!default;
+
+$red:#d9534f ;
+$red-R:red(#d9534f )!default;
+$red-G:green(#d9534f )!default;
+$red-B:blue(#d9534f )!default;
+$red-H:hue(#d9534f )!default;
+$red-S:saturation(#d9534f )!default;
+$red-L:lightness(#d9534f )!default;
+$red-A:alpha(#d9534f )!default;
+
+$orange:#f0ad4e ;
+$orange-R:red(#f0ad4e )!default;
+$orange-G:green(#f0ad4e )!default;
+$orange-B:blue(#f0ad4e )!default;
+$orange-H:hue(#f0ad4e )!default;
+$orange-S:saturation(#f0ad4e )!default;
+$orange-L:lightness(#f0ad4e )!default;
+$orange-A:alpha(#f0ad4e )!default;
+
+$yellow:#ffd500 ;
+$yellow-R:red(#ffd500 )!default;
+$yellow-G:green(#ffd500 )!default;
+$yellow-B:blue(#ffd500 )!default;
+$yellow-H:hue(#ffd500 )!default;
+$yellow-S:saturation(#ffd500 )!default;
+$yellow-L:lightness(#ffd500 )!default;
+$yellow-A:alpha(#ffd500 )!default;
+
+$green:#5cb85c ;
+$green-R:red(#5cb85c )!default;
+$green-G:green(#5cb85c )!default;
+$green-B:blue(#5cb85c )!default;
+$green-H:hue(#5cb85c )!default;
+$green-S:saturation(#5cb85c )!default;
+$green-L:lightness(#5cb85c )!default;
+$green-A:alpha(#5cb85c )!default;
+
+$blue:#0275d8 ;
+$blue-R:red(#0275d8 )!default;
+$blue-G:green(#0275d8 )!default;
+$blue-B:blue(#0275d8 )!default;
+$blue-H:hue(#0275d8 )!default;
+$blue-S:saturation(#0275d8 )!default;
+$blue-L:lightness(#0275d8 )!default;
+$blue-A:alpha(#0275d8 )!default;
+
+$teal:#5bc0de ;
+$teal-R:red(#5bc0de )!default;
+$teal-G:green(#5bc0de )!default;
+$teal-B:blue(#5bc0de )!default;
+$teal-H:hue(#5bc0de )!default;
+$teal-S:saturation(#5bc0de )!default;
+$teal-L:lightness(#5bc0de )!default;
+$teal-A:alpha(#5bc0de )!default;
+
+$pink:#ff5b77 ;
+$pink-R:red(#ff5b77 )!default;
+$pink-G:green(#ff5b77 )!default;
+$pink-B:blue(#ff5b77 )!default;
+$pink-H:hue(#ff5b77 )!default;
+$pink-S:saturation(#ff5b77 )!default;
+$pink-L:lightness(#ff5b77 )!default;
+$pink-A:alpha(#ff5b77 )!default;
+
+$purple:#613d7c ;
+$purple-R:red(#613d7c )!default;
+$purple-G:green(#613d7c )!default;
+$purple-B:blue(#613d7c )!default;
+$purple-H:hue(#613d7c )!default;
+$purple-S:saturation(#613d7c )!default;
+$purple-L:lightness(#613d7c )!default;
+$purple-A:alpha(#613d7c )!default;
+
+
+// Create grayscale
+$gray-dark:#292b2c ;
+$gray-dark-R:red(#292b2c )!default;
+$gray-dark-G:green(#292b2c )!default;
+$gray-dark-B:blue(#292b2c )!default;
+$gray-dark-H:hue(#292b2c )!default;
+$gray-dark-S:saturation(#292b2c )!default;
+$gray-dark-L:lightness(#292b2c )!default;
+$gray-dark-A:alpha(#292b2c )!default;
+
+$gray:#464a4c ;
+$gray-R:red(#464a4c )!default;
+$gray-G:green(#464a4c )!default;
+$gray-B:blue(#464a4c )!default;
+$gray-H:hue(#464a4c )!default;
+$gray-S:saturation(#464a4c )!default;
+$gray-L:lightness(#464a4c )!default;
+$gray-A:alpha(#464a4c )!default;
+
+$gray-light:#636c72 ;
+$gray-light-R:red(#636c72 )!default;
+$gray-light-G:green(#636c72 )!default;
+$gray-light-B:blue(#636c72 )!default;
+$gray-light-H:hue(#636c72 )!default;
+$gray-light-S:saturation(#636c72 )!default;
+$gray-light-L:lightness(#636c72 )!default;
+$gray-light-A:alpha(#636c72 )!default;
+
+$gray-lighter:#eceeef ;
+$gray-lighter-R:red(#eceeef )!default;
+$gray-lighter-G:green(#eceeef )!default;
+$gray-lighter-B:blue(#eceeef )!default;
+$gray-lighter-H:hue(#eceeef )!default;
+$gray-lighter-S:saturation(#eceeef )!default;
+$gray-lighter-L:lightness(#eceeef )!default;
+$gray-lighter-A:alpha(#eceeef )!default;
+
+$gray-lightest:#f7f7f9 ;
+$gray-lightest-R:red(#f7f7f9 )!default;
+$gray-lightest-G:green(#f7f7f9 )!default;
+$gray-lightest-B:blue(#f7f7f9 )!default;
+$gray-lightest-H:hue(#f7f7f9 )!default;
+$gray-lightest-S:saturation(#f7f7f9 )!default;
+$gray-lightest-L:lightness(#f7f7f9 )!default;
+$gray-lightest-A:alpha(#f7f7f9 )!default;
+
+
+// Reassign color vars to semantic color scheme
+$brand-primary:$blue ;
+$brand-primary-R:red($blue )!default;
+$brand-primary-G:green($blue )!default;
+$brand-primary-B:blue($blue )!default;
+$brand-primary-H:hue($blue )!default;
+$brand-primary-S:saturation($blue )!default;
+$brand-primary-L:lightness($blue )!default;
+$brand-primary-A:alpha($blue )!default;
+
+$brand-success:$green ;
+$brand-success-R:red($green )!default;
+$brand-success-G:green($green )!default;
+$brand-success-B:blue($green )!default;
+$brand-success-H:hue($green )!default;
+$brand-success-S:saturation($green )!default;
+$brand-success-L:lightness($green )!default;
+$brand-success-A:alpha($green )!default;
+
+$brand-info:$teal ;
+$brand-info-R:red($teal )!default;
+$brand-info-G:green($teal )!default;
+$brand-info-B:blue($teal )!default;
+$brand-info-H:hue($teal )!default;
+$brand-info-S:saturation($teal )!default;
+$brand-info-L:lightness($teal )!default;
+$brand-info-A:alpha($teal )!default;
+
+$brand-warning:$orange ;
+$brand-warning-R:red($orange )!default;
+$brand-warning-G:green($orange )!default;
+$brand-warning-B:blue($orange )!default;
+$brand-warning-H:hue($orange )!default;
+$brand-warning-S:saturation($orange )!default;
+$brand-warning-L:lightness($orange )!default;
+$brand-warning-A:alpha($orange )!default;
+
+$brand-danger:$red ;
+$brand-danger-R:red($red )!default;
+$brand-danger-G:green($red )!default;
+$brand-danger-B:blue($red )!default;
+$brand-danger-H:hue($red )!default;
+$brand-danger-S:saturation($red )!default;
+$brand-danger-L:lightness($red )!default;
+$brand-danger-A:alpha($red )!default;
+
+$brand-inverse:$gray-dark ;
+$brand-inverse-R:red($gray-dark )!default;
+$brand-inverse-G:green($gray-dark )!default;
+$brand-inverse-B:blue($gray-dark )!default;
+$brand-inverse-H:hue($gray-dark )!default;
+$brand-inverse-S:saturation($gray-dark )!default;
+$brand-inverse-L:lightness($gray-dark )!default;
+$brand-inverse-A:alpha($gray-dark )!default;
+
+
+
+// Options
+//
+// Quickly modify global styling by enabling or disabling optional features.
+
+$enable-rounded:true ;
+
+$enable-shadows:false ;
+
+$enable-gradients:false ;
+
+$enable-transitions:true ;
+
+$enable-hover-media-query:false ;
+
+$enable-grid-classes:true ;
+
+$enable-print-styles:true ;
+
+
+
+// Spacing
+//
+// Control the default styling of most Bootstrap elements by modifying these
+// variables. Mostly focused on spacing.
+// You can add more entries to the $spacers map, should you need more variation.
+
+$spacer:1rem ;
+
+$spacer-x:$spacer ;
+$spacer-x-R:red($spacer )!default;
+$spacer-x-G:green($spacer )!default;
+$spacer-x-B:blue($spacer )!default;
+$spacer-x-H:hue($spacer )!default;
+$spacer-x-S:saturation($spacer )!default;
+$spacer-x-L:lightness($spacer )!default;
+$spacer-x-A:alpha($spacer )!default;
+
+$spacer-y:$spacer ;
+$spacer-y-R:red($spacer )!default;
+$spacer-y-G:green($spacer )!default;
+$spacer-y-B:blue($spacer )!default;
+$spacer-y-H:hue($spacer )!default;
+$spacer-y-S:saturation($spacer )!default;
+$spacer-y-L:lightness($spacer )!default;
+$spacer-y-A:alpha($spacer )!default;
+
+$spacers:(
+  0: (
+    x: 0,
+    y: 0
+  ),
+  1: (
+    x: ($spacer-x * .25),
+    y: ($spacer-y * .25)
+  ),
+  2: (
+    x: ($spacer-x * .5),
+    y: ($spacer-y * .5)
+  ),
+  3: (
+    x: $spacer-x,
+    y: $spacer-y
+  ),
+  4: (
+    x: ($spacer-x * 1.5),
+    y: ($spacer-y * 1.5)
+  ),
+  5: (
+    x: ($spacer-x * 3),
+    y: ($spacer-y * 3)
+  )
+) ;
+$spacers-R:red((
+  0: (
+    x: 0,
+    y: 0
+  ),
+  1: (
+    x: ($spacer-x * .25),
+    y: ($spacer-y * .25)
+  ),
+  2: (
+    x: ($spacer-x * .5),
+    y: ($spacer-y * .5)
+  ),
+  3: (
+    x: $spacer-x,
+    y: $spacer-y
+  ),
+  4: (
+    x: ($spacer-x * 1.5),
+    y: ($spacer-y * 1.5)
+  ),
+  5: (
+    x: ($spacer-x * 3),
+    y: ($spacer-y * 3)
+  )
+) )!default;
+$spacers-G:green((
+  0: (
+    x: 0,
+    y: 0
+  ),
+  1: (
+    x: ($spacer-x * .25),
+    y: ($spacer-y * .25)
+  ),
+  2: (
+    x: ($spacer-x * .5),
+    y: ($spacer-y * .5)
+  ),
+  3: (
+    x: $spacer-x,
+    y: $spacer-y
+  ),
+  4: (
+    x: ($spacer-x * 1.5),
+    y: ($spacer-y * 1.5)
+  ),
+  5: (
+    x: ($spacer-x * 3),
+    y: ($spacer-y * 3)
+  )
+) )!default;
+$spacers-B:blue((
+  0: (
+    x: 0,
+    y: 0
+  ),
+  1: (
+    x: ($spacer-x * .25),
+    y: ($spacer-y * .25)
+  ),
+  2: (
+    x: ($spacer-x * .5),
+    y: ($spacer-y * .5)
+  ),
+  3: (
+    x: $spacer-x,
+    y: $spacer-y
+  ),
+  4: (
+    x: ($spacer-x * 1.5),
+    y: ($spacer-y * 1.5)
+  ),
+  5: (
+    x: ($spacer-x * 3),
+    y: ($spacer-y * 3)
+  )
+) )!default;
+$spacers-H:hue((
+  0: (
+    x: 0,
+    y: 0
+  ),
+  1: (
+    x: ($spacer-x * .25),
+    y: ($spacer-y * .25)
+  ),
+  2: (
+    x: ($spacer-x * .5),
+    y: ($spacer-y * .5)
+  ),
+  3: (
+    x: $spacer-x,
+    y: $spacer-y
+  ),
+  4: (
+    x: ($spacer-x * 1.5),
+    y: ($spacer-y * 1.5)
+  ),
+  5: (
+    x: ($spacer-x * 3),
+    y: ($spacer-y * 3)
+  )
+) )!default;
+$spacers-S:saturation((
+  0: (
+    x: 0,
+    y: 0
+  ),
+  1: (
+    x: ($spacer-x * .25),
+    y: ($spacer-y * .25)
+  ),
+  2: (
+    x: ($spacer-x * .5),
+    y: ($spacer-y * .5)
+  ),
+  3: (
+    x: $spacer-x,
+    y: $spacer-y
+  ),
+  4: (
+    x: ($spacer-x * 1.5),
+    y: ($spacer-y * 1.5)
+  ),
+  5: (
+    x: ($spacer-x * 3),
+    y: ($spacer-y * 3)
+  )
+) )!default;
+$spacers-L:lightness((
+  0: (
+    x: 0,
+    y: 0
+  ),
+  1: (
+    x: ($spacer-x * .25),
+    y: ($spacer-y * .25)
+  ),
+  2: (
+    x: ($spacer-x * .5),
+    y: ($spacer-y * .5)
+  ),
+  3: (
+    x: $spacer-x,
+    y: $spacer-y
+  ),
+  4: (
+    x: ($spacer-x * 1.5),
+    y: ($spacer-y * 1.5)
+  ),
+  5: (
+    x: ($spacer-x * 3),
+    y: ($spacer-y * 3)
+  )
+) )!default;
+$spacers-A:alpha((
+  0: (
+    x: 0,
+    y: 0
+  ),
+  1: (
+    x: ($spacer-x * .25),
+    y: ($spacer-y * .25)
+  ),
+  2: (
+    x: ($spacer-x * .5),
+    y: ($spacer-y * .5)
+  ),
+  3: (
+    x: $spacer-x,
+    y: $spacer-y
+  ),
+  4: (
+    x: ($spacer-x * 1.5),
+    y: ($spacer-y * 1.5)
+  ),
+  5: (
+    x: ($spacer-x * 3),
+    y: ($spacer-y * 3)
+  )
+) )!default;
+
+$border-width:1px ;
+
+
+// This variable affects the `.h-*` and `.w-*` classes.
+$sizes:(
+  25: 25%,
+  50: 50%,
+  75: 75%,
+  100: 100%
+) ;
+
+
+// Body
+//
+// Settings for the `<body>` element.
+
+$body-bg:$white ;
+$body-bg-R:red($white )!default;
+$body-bg-G:green($white )!default;
+$body-bg-B:blue($white )!default;
+$body-bg-H:hue($white )!default;
+$body-bg-S:saturation($white )!default;
+$body-bg-L:lightness($white )!default;
+$body-bg-A:alpha($white )!default;
+
+$body-color:$gray-dark ;
+$body-color-R:red($gray-dark )!default;
+$body-color-G:green($gray-dark )!default;
+$body-color-B:blue($gray-dark )!default;
+$body-color-H:hue($gray-dark )!default;
+$body-color-S:saturation($gray-dark )!default;
+$body-color-L:lightness($gray-dark )!default;
+$body-color-A:alpha($gray-dark )!default;
+
+$inverse-bg:$gray-dark ;
+$inverse-bg-R:red($gray-dark )!default;
+$inverse-bg-G:green($gray-dark )!default;
+$inverse-bg-B:blue($gray-dark )!default;
+$inverse-bg-H:hue($gray-dark )!default;
+$inverse-bg-S:saturation($gray-dark )!default;
+$inverse-bg-L:lightness($gray-dark )!default;
+$inverse-bg-A:alpha($gray-dark )!default;
+
+$inverse-color:$gray-lighter ;
+$inverse-color-R:red($gray-lighter )!default;
+$inverse-color-G:green($gray-lighter )!default;
+$inverse-color-B:blue($gray-lighter )!default;
+$inverse-color-H:hue($gray-lighter )!default;
+$inverse-color-S:saturation($gray-lighter )!default;
+$inverse-color-L:lightness($gray-lighter )!default;
+$inverse-color-A:alpha($gray-lighter )!default;
+
+
+
+// Links
+//
+// Style anchor elements.
+
+$link-color:$brand-primary ;
+$link-color-R:red($brand-primary )!default;
+$link-color-G:green($brand-primary )!default;
+$link-color-B:blue($brand-primary )!default;
+$link-color-H:hue($brand-primary )!default;
+$link-color-S:saturation($brand-primary )!default;
+$link-color-L:lightness($brand-primary )!default;
+$link-color-A:alpha($brand-primary )!default;
+
+$link-decoration:none ;
+
+$link-hover-color:darken($link-color, 15%) ;
+$link-hover-color-R:red(darken($link-color, 15%) )!default;
+$link-hover-color-G:green(darken($link-color, 15%) )!default;
+$link-hover-color-B:blue(darken($link-color, 15%) )!default;
+$link-hover-color-H:hue(darken($link-color, 15%) )!default;
+$link-hover-color-S:saturation(darken($link-color, 15%) )!default;
+$link-hover-color-L:lightness(darken($link-color, 15%) )!default;
+$link-hover-color-A:alpha(darken($link-color, 15%) )!default;
+
+$link-hover-decoration:underline ;
+
+
+
+// Grid breakpoints
+//
+// Define the minimum dimensions at which your layout will change,
+// adapting to different screen sizes, for use in media queries.
+
+$grid-breakpoints:(
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px
+) ;
+
+@include _assert-ascending($grid-breakpoints, "$grid-breakpoints");
+@include _assert-starts-at-zero($grid-breakpoints);
+
+
+// Grid containers
+//
+// Define the maximum width of `.container` for different screen sizes.
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px
+) !default;
+@include _assert-ascending($container-max-widths, "$container-max-widths");
+
+
+// Grid columns
+//
+// Set the number of columns and specify the width of the gutters.
+
+$grid-columns:12 ;
+
+$grid-gutter-width-base:30px ;
+
+$grid-gutter-widths:(
+  xs: $grid-gutter-width-base,
+  sm: $grid-gutter-width-base,
+  md: $grid-gutter-width-base,
+  lg: $grid-gutter-width-base,
+  xl: $grid-gutter-width-base
+) ;
+$grid-gutter-widths-R:red((
+  xs: $grid-gutter-width-base,
+  sm: $grid-gutter-width-base,
+  md: $grid-gutter-width-base,
+  lg: $grid-gutter-width-base,
+  xl: $grid-gutter-width-base
+) )!default;
+$grid-gutter-widths-G:green((
+  xs: $grid-gutter-width-base,
+  sm: $grid-gutter-width-base,
+  md: $grid-gutter-width-base,
+  lg: $grid-gutter-width-base,
+  xl: $grid-gutter-width-base
+) )!default;
+$grid-gutter-widths-B:blue((
+  xs: $grid-gutter-width-base,
+  sm: $grid-gutter-width-base,
+  md: $grid-gutter-width-base,
+  lg: $grid-gutter-width-base,
+  xl: $grid-gutter-width-base
+) )!default;
+$grid-gutter-widths-H:hue((
+  xs: $grid-gutter-width-base,
+  sm: $grid-gutter-width-base,
+  md: $grid-gutter-width-base,
+  lg: $grid-gutter-width-base,
+  xl: $grid-gutter-width-base
+) )!default;
+$grid-gutter-widths-S:saturation((
+  xs: $grid-gutter-width-base,
+  sm: $grid-gutter-width-base,
+  md: $grid-gutter-width-base,
+  lg: $grid-gutter-width-base,
+  xl: $grid-gutter-width-base
+) )!default;
+$grid-gutter-widths-L:lightness((
+  xs: $grid-gutter-width-base,
+  sm: $grid-gutter-width-base,
+  md: $grid-gutter-width-base,
+  lg: $grid-gutter-width-base,
+  xl: $grid-gutter-width-base
+) )!default;
+$grid-gutter-widths-A:alpha((
+  xs: $grid-gutter-width-base,
+  sm: $grid-gutter-width-base,
+  md: $grid-gutter-width-base,
+  lg: $grid-gutter-width-base,
+  xl: $grid-gutter-width-base
+) )!default;
+
+
+// Fonts
+//
+// Font, line-height, and color for body text, headings, and more.
+
+$font-family-sans-serif:-apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif ;
+
+$font-family-serif:Georgia, "Times New Roman", Times, serif ;
+
+$font-family-monospace:Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace ;
+
+$font-family-base:$font-family-sans-serif ;
+$font-family-base-R:red($font-family-sans-serif )!default;
+$font-family-base-G:green($font-family-sans-serif )!default;
+$font-family-base-B:blue($font-family-sans-serif )!default;
+$font-family-base-H:hue($font-family-sans-serif )!default;
+$font-family-base-S:saturation($font-family-sans-serif )!default;
+$font-family-base-L:lightness($font-family-sans-serif )!default;
+$font-family-base-A:alpha($font-family-sans-serif )!default;
+
+
+$font-size-base:1rem ;
+ // Assumes the browser default, typically `16px`
+$font-size-lg:1.25rem ;
+
+$font-size-sm:.875rem ;
+
+$font-size-xs:.75rem ;
+
+
+$font-weight-normal:normal ;
+
+$font-weight-bold:bold ;
+
+
+$font-weight-base:$font-weight-normal ;
+$font-weight-base-R:red($font-weight-normal )!default;
+$font-weight-base-G:green($font-weight-normal )!default;
+$font-weight-base-B:blue($font-weight-normal )!default;
+$font-weight-base-H:hue($font-weight-normal )!default;
+$font-weight-base-S:saturation($font-weight-normal )!default;
+$font-weight-base-L:lightness($font-weight-normal )!default;
+$font-weight-base-A:alpha($font-weight-normal )!default;
+
+$line-height-base:1.5 ;
+
+
+$font-size-h1:2.5rem ;
+
+$font-size-h2:2rem ;
+
+$font-size-h3:1.75rem ;
+
+$font-size-h4:1.5rem ;
+
+$font-size-h5:1.25rem ;
+
+$font-size-h6:1rem ;
+
+
+$headings-margin-bottom:($spacer / 2) ;
+$headings-margin-bottom-R:red(($spacer / 2) )!default;
+$headings-margin-bottom-G:green(($spacer / 2) )!default;
+$headings-margin-bottom-B:blue(($spacer / 2) )!default;
+$headings-margin-bottom-H:hue(($spacer / 2) )!default;
+$headings-margin-bottom-S:saturation(($spacer / 2) )!default;
+$headings-margin-bottom-L:lightness(($spacer / 2) )!default;
+$headings-margin-bottom-A:alpha(($spacer / 2) )!default;
+
+$headings-font-family:inherit ;
+
+$headings-font-weight:500 ;
+
+$headings-line-height:1.1 ;
+
+$headings-color:inherit ;
+
+
+$display1-size:6rem ;
+
+$display2-size:5.5rem ;
+
+$display3-size:4.5rem ;
+
+$display4-size:3.5rem ;
+
+
+$display1-weight:300 ;
+
+$display2-weight:300 ;
+
+$display3-weight:300 ;
+
+$display4-weight:300 ;
+
+$display-line-height:$headings-line-height ;
+$display-line-height-R:red($headings-line-height )!default;
+$display-line-height-G:green($headings-line-height )!default;
+$display-line-height-B:blue($headings-line-height )!default;
+$display-line-height-H:hue($headings-line-height )!default;
+$display-line-height-S:saturation($headings-line-height )!default;
+$display-line-height-L:lightness($headings-line-height )!default;
+$display-line-height-A:alpha($headings-line-height )!default;
+
+
+$lead-font-size:1.25rem ;
+
+$lead-font-weight:300 ;
+
+
+$small-font-size:80% ;
+
+
+$text-muted:$gray-light ;
+$text-muted-R:red($gray-light )!default;
+$text-muted-G:green($gray-light )!default;
+$text-muted-B:blue($gray-light )!default;
+$text-muted-H:hue($gray-light )!default;
+$text-muted-S:saturation($gray-light )!default;
+$text-muted-L:lightness($gray-light )!default;
+$text-muted-A:alpha($gray-light )!default;
+
+
+$abbr-border-color:$gray-light ;
+$abbr-border-color-R:red($gray-light )!default;
+$abbr-border-color-G:green($gray-light )!default;
+$abbr-border-color-B:blue($gray-light )!default;
+$abbr-border-color-H:hue($gray-light )!default;
+$abbr-border-color-S:saturation($gray-light )!default;
+$abbr-border-color-L:lightness($gray-light )!default;
+$abbr-border-color-A:alpha($gray-light )!default;
+
+
+$blockquote-small-color:$gray-light ;
+$blockquote-small-color-R:red($gray-light )!default;
+$blockquote-small-color-G:green($gray-light )!default;
+$blockquote-small-color-B:blue($gray-light )!default;
+$blockquote-small-color-H:hue($gray-light )!default;
+$blockquote-small-color-S:saturation($gray-light )!default;
+$blockquote-small-color-L:lightness($gray-light )!default;
+$blockquote-small-color-A:alpha($gray-light )!default;
+
+$blockquote-font-size:($font-size-base * 1.25) ;
+$blockquote-font-size-R:red(($font-size-base * 1.25) )!default;
+$blockquote-font-size-G:green(($font-size-base * 1.25) )!default;
+$blockquote-font-size-B:blue(($font-size-base * 1.25) )!default;
+$blockquote-font-size-H:hue(($font-size-base * 1.25) )!default;
+$blockquote-font-size-S:saturation(($font-size-base * 1.25) )!default;
+$blockquote-font-size-L:lightness(($font-size-base * 1.25) )!default;
+$blockquote-font-size-A:alpha(($font-size-base * 1.25) )!default;
+
+$blockquote-border-color:$gray-lighter ;
+$blockquote-border-color-R:red($gray-lighter )!default;
+$blockquote-border-color-G:green($gray-lighter )!default;
+$blockquote-border-color-B:blue($gray-lighter )!default;
+$blockquote-border-color-H:hue($gray-lighter )!default;
+$blockquote-border-color-S:saturation($gray-lighter )!default;
+$blockquote-border-color-L:lightness($gray-lighter )!default;
+$blockquote-border-color-A:alpha($gray-lighter )!default;
+
+$blockquote-border-width:.25rem ;
+
+
+$hr-border-color:rgba($black,.1) ;
+$hr-border-color-R:red(rgba($black,.1) )!default;
+$hr-border-color-G:green(rgba($black,.1) )!default;
+$hr-border-color-B:blue(rgba($black,.1) )!default;
+$hr-border-color-H:hue(rgba($black,.1) )!default;
+$hr-border-color-S:saturation(rgba($black,.1) )!default;
+$hr-border-color-L:lightness(rgba($black,.1) )!default;
+$hr-border-color-A:alpha(rgba($black,.1) )!default;
+
+$hr-border-width:$border-width ;
+$hr-border-width-R:red($border-width )!default;
+$hr-border-width-G:green($border-width )!default;
+$hr-border-width-B:blue($border-width )!default;
+$hr-border-width-H:hue($border-width )!default;
+$hr-border-width-S:saturation($border-width )!default;
+$hr-border-width-L:lightness($border-width )!default;
+$hr-border-width-A:alpha($border-width )!default;
+
+
+$mark-padding:.2em ;
+
+
+$dt-font-weight:$font-weight-bold ;
+$dt-font-weight-R:red($font-weight-bold )!default;
+$dt-font-weight-G:green($font-weight-bold )!default;
+$dt-font-weight-B:blue($font-weight-bold )!default;
+$dt-font-weight-H:hue($font-weight-bold )!default;
+$dt-font-weight-S:saturation($font-weight-bold )!default;
+$dt-font-weight-L:lightness($font-weight-bold )!default;
+$dt-font-weight-A:alpha($font-weight-bold )!default;
+
+
+$kbd-box-shadow:inset 0 -.1rem 0 rgba($black,.25) ;
+$kbd-box-shadow-R:red(inset 0 -.1rem 0 rgba($black,.25) )!default;
+$kbd-box-shadow-G:green(inset 0 -.1rem 0 rgba($black,.25) )!default;
+$kbd-box-shadow-B:blue(inset 0 -.1rem 0 rgba($black,.25) )!default;
+$kbd-box-shadow-H:hue(inset 0 -.1rem 0 rgba($black,.25) )!default;
+$kbd-box-shadow-S:saturation(inset 0 -.1rem 0 rgba($black,.25) )!default;
+$kbd-box-shadow-L:lightness(inset 0 -.1rem 0 rgba($black,.25) )!default;
+$kbd-box-shadow-A:alpha(inset 0 -.1rem 0 rgba($black,.25) )!default;
+
+$nested-kbd-font-weight:$font-weight-bold ;
+$nested-kbd-font-weight-R:red($font-weight-bold )!default;
+$nested-kbd-font-weight-G:green($font-weight-bold )!default;
+$nested-kbd-font-weight-B:blue($font-weight-bold )!default;
+$nested-kbd-font-weight-H:hue($font-weight-bold )!default;
+$nested-kbd-font-weight-S:saturation($font-weight-bold )!default;
+$nested-kbd-font-weight-L:lightness($font-weight-bold )!default;
+$nested-kbd-font-weight-A:alpha($font-weight-bold )!default;
+
+
+$list-inline-padding:5px ;
+
+
+
+// Components
+//
+// Define common padding and border radius sizes and more.
+
+$line-height-lg:(4 / 3) ;
+
+$line-height-sm:1.5 ;
+
+
+$border-radius:.25rem ;
+
+$border-radius-lg:.3rem ;
+
+$border-radius-sm:.2rem ;
+
+
+$component-active-color:$white ;
+$component-active-color-R:red($white )!default;
+$component-active-color-G:green($white )!default;
+$component-active-color-B:blue($white )!default;
+$component-active-color-H:hue($white )!default;
+$component-active-color-S:saturation($white )!default;
+$component-active-color-L:lightness($white )!default;
+$component-active-color-A:alpha($white )!default;
+
+$component-active-bg:$brand-primary ;
+$component-active-bg-R:red($brand-primary )!default;
+$component-active-bg-G:green($brand-primary )!default;
+$component-active-bg-B:blue($brand-primary )!default;
+$component-active-bg-H:hue($brand-primary )!default;
+$component-active-bg-S:saturation($brand-primary )!default;
+$component-active-bg-L:lightness($brand-primary )!default;
+$component-active-bg-A:alpha($brand-primary )!default;
+
+
+$caret-width:.3em ;
+
+
+$transition-base:all .2s ease-in-out ;
+
+$transition-fade:opacity .15s linear ;
+
+$transition-collapse:height .35s ease ;
+
+
+
+// Tables
+//
+// Customizes the `.table` component with basic values, each used across all table variations.
+
+$table-cell-padding:.75rem ;
+
+$table-sm-cell-padding:.3rem ;
+
+
+$table-bg:transparent ;
+
+
+$table-inverse-bg:$gray-dark ;
+$table-inverse-bg-R:red($gray-dark )!default;
+$table-inverse-bg-G:green($gray-dark )!default;
+$table-inverse-bg-B:blue($gray-dark )!default;
+$table-inverse-bg-H:hue($gray-dark )!default;
+$table-inverse-bg-S:saturation($gray-dark )!default;
+$table-inverse-bg-L:lightness($gray-dark )!default;
+$table-inverse-bg-A:alpha($gray-dark )!default;
+
+$table-inverse-color:$body-bg ;
+$table-inverse-color-R:red($body-bg )!default;
+$table-inverse-color-G:green($body-bg )!default;
+$table-inverse-color-B:blue($body-bg )!default;
+$table-inverse-color-H:hue($body-bg )!default;
+$table-inverse-color-S:saturation($body-bg )!default;
+$table-inverse-color-L:lightness($body-bg )!default;
+$table-inverse-color-A:alpha($body-bg )!default;
+
+
+$table-bg-accent:rgba($black,.05) ;
+$table-bg-accent-R:red(rgba($black,.05) )!default;
+$table-bg-accent-G:green(rgba($black,.05) )!default;
+$table-bg-accent-B:blue(rgba($black,.05) )!default;
+$table-bg-accent-H:hue(rgba($black,.05) )!default;
+$table-bg-accent-S:saturation(rgba($black,.05) )!default;
+$table-bg-accent-L:lightness(rgba($black,.05) )!default;
+$table-bg-accent-A:alpha(rgba($black,.05) )!default;
+
+$table-bg-hover:rgba($black,.075) ;
+$table-bg-hover-R:red(rgba($black,.075) )!default;
+$table-bg-hover-G:green(rgba($black,.075) )!default;
+$table-bg-hover-B:blue(rgba($black,.075) )!default;
+$table-bg-hover-H:hue(rgba($black,.075) )!default;
+$table-bg-hover-S:saturation(rgba($black,.075) )!default;
+$table-bg-hover-L:lightness(rgba($black,.075) )!default;
+$table-bg-hover-A:alpha(rgba($black,.075) )!default;
+
+$table-bg-active:$table-bg-hover ;
+$table-bg-active-R:red($table-bg-hover )!default;
+$table-bg-active-G:green($table-bg-hover )!default;
+$table-bg-active-B:blue($table-bg-hover )!default;
+$table-bg-active-H:hue($table-bg-hover )!default;
+$table-bg-active-S:saturation($table-bg-hover )!default;
+$table-bg-active-L:lightness($table-bg-hover )!default;
+$table-bg-active-A:alpha($table-bg-hover )!default;
+
+
+$table-head-bg:$gray-lighter ;
+$table-head-bg-R:red($gray-lighter )!default;
+$table-head-bg-G:green($gray-lighter )!default;
+$table-head-bg-B:blue($gray-lighter )!default;
+$table-head-bg-H:hue($gray-lighter )!default;
+$table-head-bg-S:saturation($gray-lighter )!default;
+$table-head-bg-L:lightness($gray-lighter )!default;
+$table-head-bg-A:alpha($gray-lighter )!default;
+
+$table-head-color:$gray ;
+$table-head-color-R:red($gray )!default;
+$table-head-color-G:green($gray )!default;
+$table-head-color-B:blue($gray )!default;
+$table-head-color-H:hue($gray )!default;
+$table-head-color-S:saturation($gray )!default;
+$table-head-color-L:lightness($gray )!default;
+$table-head-color-A:alpha($gray )!default;
+
+
+$table-border-width:$border-width ;
+$table-border-width-R:red($border-width )!default;
+$table-border-width-G:green($border-width )!default;
+$table-border-width-B:blue($border-width )!default;
+$table-border-width-H:hue($border-width )!default;
+$table-border-width-S:saturation($border-width )!default;
+$table-border-width-L:lightness($border-width )!default;
+$table-border-width-A:alpha($border-width )!default;
+
+$table-border-color:$gray-lighter ;
+$table-border-color-R:red($gray-lighter )!default;
+$table-border-color-G:green($gray-lighter )!default;
+$table-border-color-B:blue($gray-lighter )!default;
+$table-border-color-H:hue($gray-lighter )!default;
+$table-border-color-S:saturation($gray-lighter )!default;
+$table-border-color-L:lightness($gray-lighter )!default;
+$table-border-color-A:alpha($gray-lighter )!default;
+
+
+
+// Buttons
+//
+// For each of Bootstrap's buttons, define text, background and border color.
+
+$btn-padding-x:1rem ;
+
+$btn-padding-y:.5rem ;
+
+$btn-line-height:1.25 ;
+
+$btn-font-weight:$font-weight-normal ;
+$btn-font-weight-R:red($font-weight-normal )!default;
+$btn-font-weight-G:green($font-weight-normal )!default;
+$btn-font-weight-B:blue($font-weight-normal )!default;
+$btn-font-weight-H:hue($font-weight-normal )!default;
+$btn-font-weight-S:saturation($font-weight-normal )!default;
+$btn-font-weight-L:lightness($font-weight-normal )!default;
+$btn-font-weight-A:alpha($font-weight-normal )!default;
+
+$btn-box-shadow:inset 0 1px 0 rgba($white,.15), 0 1px 1px rgba($black,.075) ;
+$btn-box-shadow-R:red(inset 0 1px 0 rgba($white,.15), 0 1px 1px rgba($black,.075) )!default;
+$btn-box-shadow-G:green(inset 0 1px 0 rgba($white,.15), 0 1px 1px rgba($black,.075) )!default;
+$btn-box-shadow-B:blue(inset 0 1px 0 rgba($white,.15), 0 1px 1px rgba($black,.075) )!default;
+$btn-box-shadow-H:hue(inset 0 1px 0 rgba($white,.15), 0 1px 1px rgba($black,.075) )!default;
+$btn-box-shadow-S:saturation(inset 0 1px 0 rgba($white,.15), 0 1px 1px rgba($black,.075) )!default;
+$btn-box-shadow-L:lightness(inset 0 1px 0 rgba($white,.15), 0 1px 1px rgba($black,.075) )!default;
+$btn-box-shadow-A:alpha(inset 0 1px 0 rgba($white,.15), 0 1px 1px rgba($black,.075) )!default;
+
+$btn-focus-box-shadow:0 0 0 2px rgba($brand-primary, .25) ;
+$btn-focus-box-shadow-R:red(0 0 0 2px rgba($brand-primary, .25) )!default;
+$btn-focus-box-shadow-G:green(0 0 0 2px rgba($brand-primary, .25) )!default;
+$btn-focus-box-shadow-B:blue(0 0 0 2px rgba($brand-primary, .25) )!default;
+$btn-focus-box-shadow-H:hue(0 0 0 2px rgba($brand-primary, .25) )!default;
+$btn-focus-box-shadow-S:saturation(0 0 0 2px rgba($brand-primary, .25) )!default;
+$btn-focus-box-shadow-L:lightness(0 0 0 2px rgba($brand-primary, .25) )!default;
+$btn-focus-box-shadow-A:alpha(0 0 0 2px rgba($brand-primary, .25) )!default;
+
+$btn-active-box-shadow:inset 0 3px 5px rgba($black,.125) ;
+$btn-active-box-shadow-R:red(inset 0 3px 5px rgba($black,.125) )!default;
+$btn-active-box-shadow-G:green(inset 0 3px 5px rgba($black,.125) )!default;
+$btn-active-box-shadow-B:blue(inset 0 3px 5px rgba($black,.125) )!default;
+$btn-active-box-shadow-H:hue(inset 0 3px 5px rgba($black,.125) )!default;
+$btn-active-box-shadow-S:saturation(inset 0 3px 5px rgba($black,.125) )!default;
+$btn-active-box-shadow-L:lightness(inset 0 3px 5px rgba($black,.125) )!default;
+$btn-active-box-shadow-A:alpha(inset 0 3px 5px rgba($black,.125) )!default;
+
+
+$btn-primary-color:$white ;
+$btn-primary-color-R:red($white )!default;
+$btn-primary-color-G:green($white )!default;
+$btn-primary-color-B:blue($white )!default;
+$btn-primary-color-H:hue($white )!default;
+$btn-primary-color-S:saturation($white )!default;
+$btn-primary-color-L:lightness($white )!default;
+$btn-primary-color-A:alpha($white )!default;
+
+$btn-primary-bg:$brand-primary ;
+$btn-primary-bg-R:red($brand-primary )!default;
+$btn-primary-bg-G:green($brand-primary )!default;
+$btn-primary-bg-B:blue($brand-primary )!default;
+$btn-primary-bg-H:hue($brand-primary )!default;
+$btn-primary-bg-S:saturation($brand-primary )!default;
+$btn-primary-bg-L:lightness($brand-primary )!default;
+$btn-primary-bg-A:alpha($brand-primary )!default;
+
+$btn-primary-border:$btn-primary-bg ;
+$btn-primary-border-R:red($btn-primary-bg )!default;
+$btn-primary-border-G:green($btn-primary-bg )!default;
+$btn-primary-border-B:blue($btn-primary-bg )!default;
+$btn-primary-border-H:hue($btn-primary-bg )!default;
+$btn-primary-border-S:saturation($btn-primary-bg )!default;
+$btn-primary-border-L:lightness($btn-primary-bg )!default;
+$btn-primary-border-A:alpha($btn-primary-bg )!default;
+
+
+$btn-secondary-color:$gray-dark ;
+$btn-secondary-color-R:red($gray-dark )!default;
+$btn-secondary-color-G:green($gray-dark )!default;
+$btn-secondary-color-B:blue($gray-dark )!default;
+$btn-secondary-color-H:hue($gray-dark )!default;
+$btn-secondary-color-S:saturation($gray-dark )!default;
+$btn-secondary-color-L:lightness($gray-dark )!default;
+$btn-secondary-color-A:alpha($gray-dark )!default;
+
+$btn-secondary-bg:$white ;
+$btn-secondary-bg-R:red($white )!default;
+$btn-secondary-bg-G:green($white )!default;
+$btn-secondary-bg-B:blue($white )!default;
+$btn-secondary-bg-H:hue($white )!default;
+$btn-secondary-bg-S:saturation($white )!default;
+$btn-secondary-bg-L:lightness($white )!default;
+$btn-secondary-bg-A:alpha($white )!default;
+
+$btn-secondary-border:#ccc ;
+$btn-secondary-border-R:red(#ccc )!default;
+$btn-secondary-border-G:green(#ccc )!default;
+$btn-secondary-border-B:blue(#ccc )!default;
+$btn-secondary-border-H:hue(#ccc )!default;
+$btn-secondary-border-S:saturation(#ccc )!default;
+$btn-secondary-border-L:lightness(#ccc )!default;
+$btn-secondary-border-A:alpha(#ccc )!default;
+
+
+$btn-info-color:$white ;
+$btn-info-color-R:red($white )!default;
+$btn-info-color-G:green($white )!default;
+$btn-info-color-B:blue($white )!default;
+$btn-info-color-H:hue($white )!default;
+$btn-info-color-S:saturation($white )!default;
+$btn-info-color-L:lightness($white )!default;
+$btn-info-color-A:alpha($white )!default;
+
+$btn-info-bg:$brand-info ;
+$btn-info-bg-R:red($brand-info )!default;
+$btn-info-bg-G:green($brand-info )!default;
+$btn-info-bg-B:blue($brand-info )!default;
+$btn-info-bg-H:hue($brand-info )!default;
+$btn-info-bg-S:saturation($brand-info )!default;
+$btn-info-bg-L:lightness($brand-info )!default;
+$btn-info-bg-A:alpha($brand-info )!default;
+
+$btn-info-border:$btn-info-bg ;
+$btn-info-border-R:red($btn-info-bg )!default;
+$btn-info-border-G:green($btn-info-bg )!default;
+$btn-info-border-B:blue($btn-info-bg )!default;
+$btn-info-border-H:hue($btn-info-bg )!default;
+$btn-info-border-S:saturation($btn-info-bg )!default;
+$btn-info-border-L:lightness($btn-info-bg )!default;
+$btn-info-border-A:alpha($btn-info-bg )!default;
+
+
+$btn-success-color:$white ;
+$btn-success-color-R:red($white )!default;
+$btn-success-color-G:green($white )!default;
+$btn-success-color-B:blue($white )!default;
+$btn-success-color-H:hue($white )!default;
+$btn-success-color-S:saturation($white )!default;
+$btn-success-color-L:lightness($white )!default;
+$btn-success-color-A:alpha($white )!default;
+
+$btn-success-bg:$brand-success ;
+$btn-success-bg-R:red($brand-success )!default;
+$btn-success-bg-G:green($brand-success )!default;
+$btn-success-bg-B:blue($brand-success )!default;
+$btn-success-bg-H:hue($brand-success )!default;
+$btn-success-bg-S:saturation($brand-success )!default;
+$btn-success-bg-L:lightness($brand-success )!default;
+$btn-success-bg-A:alpha($brand-success )!default;
+
+$btn-success-border:$btn-success-bg ;
+$btn-success-border-R:red($btn-success-bg )!default;
+$btn-success-border-G:green($btn-success-bg )!default;
+$btn-success-border-B:blue($btn-success-bg )!default;
+$btn-success-border-H:hue($btn-success-bg )!default;
+$btn-success-border-S:saturation($btn-success-bg )!default;
+$btn-success-border-L:lightness($btn-success-bg )!default;
+$btn-success-border-A:alpha($btn-success-bg )!default;
+
+
+$btn-warning-color:$white ;
+$btn-warning-color-R:red($white )!default;
+$btn-warning-color-G:green($white )!default;
+$btn-warning-color-B:blue($white )!default;
+$btn-warning-color-H:hue($white )!default;
+$btn-warning-color-S:saturation($white )!default;
+$btn-warning-color-L:lightness($white )!default;
+$btn-warning-color-A:alpha($white )!default;
+
+$btn-warning-bg:$brand-warning ;
+$btn-warning-bg-R:red($brand-warning )!default;
+$btn-warning-bg-G:green($brand-warning )!default;
+$btn-warning-bg-B:blue($brand-warning )!default;
+$btn-warning-bg-H:hue($brand-warning )!default;
+$btn-warning-bg-S:saturation($brand-warning )!default;
+$btn-warning-bg-L:lightness($brand-warning )!default;
+$btn-warning-bg-A:alpha($brand-warning )!default;
+
+$btn-warning-border:$btn-warning-bg ;
+$btn-warning-border-R:red($btn-warning-bg )!default;
+$btn-warning-border-G:green($btn-warning-bg )!default;
+$btn-warning-border-B:blue($btn-warning-bg )!default;
+$btn-warning-border-H:hue($btn-warning-bg )!default;
+$btn-warning-border-S:saturation($btn-warning-bg )!default;
+$btn-warning-border-L:lightness($btn-warning-bg )!default;
+$btn-warning-border-A:alpha($btn-warning-bg )!default;
+
+
+$btn-danger-color:$white ;
+$btn-danger-color-R:red($white )!default;
+$btn-danger-color-G:green($white )!default;
+$btn-danger-color-B:blue($white )!default;
+$btn-danger-color-H:hue($white )!default;
+$btn-danger-color-S:saturation($white )!default;
+$btn-danger-color-L:lightness($white )!default;
+$btn-danger-color-A:alpha($white )!default;
+
+$btn-danger-bg:$brand-danger ;
+$btn-danger-bg-R:red($brand-danger )!default;
+$btn-danger-bg-G:green($brand-danger )!default;
+$btn-danger-bg-B:blue($brand-danger )!default;
+$btn-danger-bg-H:hue($brand-danger )!default;
+$btn-danger-bg-S:saturation($brand-danger )!default;
+$btn-danger-bg-L:lightness($brand-danger )!default;
+$btn-danger-bg-A:alpha($brand-danger )!default;
+
+$btn-danger-border:$btn-danger-bg ;
+$btn-danger-border-R:red($btn-danger-bg )!default;
+$btn-danger-border-G:green($btn-danger-bg )!default;
+$btn-danger-border-B:blue($btn-danger-bg )!default;
+$btn-danger-border-H:hue($btn-danger-bg )!default;
+$btn-danger-border-S:saturation($btn-danger-bg )!default;
+$btn-danger-border-L:lightness($btn-danger-bg )!default;
+$btn-danger-border-A:alpha($btn-danger-bg )!default;
+
+
+$btn-link-disabled-color:$gray-light ;
+$btn-link-disabled-color-R:red($gray-light )!default;
+$btn-link-disabled-color-G:green($gray-light )!default;
+$btn-link-disabled-color-B:blue($gray-light )!default;
+$btn-link-disabled-color-H:hue($gray-light )!default;
+$btn-link-disabled-color-S:saturation($gray-light )!default;
+$btn-link-disabled-color-L:lightness($gray-light )!default;
+$btn-link-disabled-color-A:alpha($gray-light )!default;
+
+
+$btn-padding-x-sm:.5rem ;
+
+$btn-padding-y-sm:.25rem ;
+
+
+$btn-padding-x-lg:1.5rem ;
+
+$btn-padding-y-lg:.75rem ;
+
+
+$btn-block-spacing-y:.5rem ;
+
+$btn-toolbar-margin:.5rem ;
+
+
+// Allows for customizing button radius independently from global border radius
+$btn-border-radius:$border-radius ;
+$btn-border-radius-R:red($border-radius )!default;
+$btn-border-radius-G:green($border-radius )!default;
+$btn-border-radius-B:blue($border-radius )!default;
+$btn-border-radius-H:hue($border-radius )!default;
+$btn-border-radius-S:saturation($border-radius )!default;
+$btn-border-radius-L:lightness($border-radius )!default;
+$btn-border-radius-A:alpha($border-radius )!default;
+
+$btn-border-radius-lg:$border-radius-lg ;
+$btn-border-radius-lg-R:red($border-radius-lg )!default;
+$btn-border-radius-lg-G:green($border-radius-lg )!default;
+$btn-border-radius-lg-B:blue($border-radius-lg )!default;
+$btn-border-radius-lg-H:hue($border-radius-lg )!default;
+$btn-border-radius-lg-S:saturation($border-radius-lg )!default;
+$btn-border-radius-lg-L:lightness($border-radius-lg )!default;
+$btn-border-radius-lg-A:alpha($border-radius-lg )!default;
+
+$btn-border-radius-sm:$border-radius-sm ;
+$btn-border-radius-sm-R:red($border-radius-sm )!default;
+$btn-border-radius-sm-G:green($border-radius-sm )!default;
+$btn-border-radius-sm-B:blue($border-radius-sm )!default;
+$btn-border-radius-sm-H:hue($border-radius-sm )!default;
+$btn-border-radius-sm-S:saturation($border-radius-sm )!default;
+$btn-border-radius-sm-L:lightness($border-radius-sm )!default;
+$btn-border-radius-sm-A:alpha($border-radius-sm )!default;
+
+
+$btn-transition:all .2s ease-in-out ;
+
+
+
+// Forms
+
+$input-padding-x:.75rem ;
+
+$input-padding-y:.5rem ;
+
+$input-line-height:1.25 ;
+
+
+$input-bg:$white ;
+$input-bg-R:red($white )!default;
+$input-bg-G:green($white )!default;
+$input-bg-B:blue($white )!default;
+$input-bg-H:hue($white )!default;
+$input-bg-S:saturation($white )!default;
+$input-bg-L:lightness($white )!default;
+$input-bg-A:alpha($white )!default;
+
+$input-bg-disabled:$gray-lighter ;
+$input-bg-disabled-R:red($gray-lighter )!default;
+$input-bg-disabled-G:green($gray-lighter )!default;
+$input-bg-disabled-B:blue($gray-lighter )!default;
+$input-bg-disabled-H:hue($gray-lighter )!default;
+$input-bg-disabled-S:saturation($gray-lighter )!default;
+$input-bg-disabled-L:lightness($gray-lighter )!default;
+$input-bg-disabled-A:alpha($gray-lighter )!default;
+
+
+$input-color:$gray ;
+$input-color-R:red($gray )!default;
+$input-color-G:green($gray )!default;
+$input-color-B:blue($gray )!default;
+$input-color-H:hue($gray )!default;
+$input-color-S:saturation($gray )!default;
+$input-color-L:lightness($gray )!default;
+$input-color-A:alpha($gray )!default;
+
+$input-border-color:rgba($black,.15) ;
+$input-border-color-R:red(rgba($black,.15) )!default;
+$input-border-color-G:green(rgba($black,.15) )!default;
+$input-border-color-B:blue(rgba($black,.15) )!default;
+$input-border-color-H:hue(rgba($black,.15) )!default;
+$input-border-color-S:saturation(rgba($black,.15) )!default;
+$input-border-color-L:lightness(rgba($black,.15) )!default;
+$input-border-color-A:alpha(rgba($black,.15) )!default;
+
+$input-btn-border-width:$border-width ;
+$input-btn-border-width-R:red($border-width )!default;
+$input-btn-border-width-G:green($border-width )!default;
+$input-btn-border-width-B:blue($border-width )!default;
+$input-btn-border-width-H:hue($border-width )!default;
+$input-btn-border-width-S:saturation($border-width )!default;
+$input-btn-border-width-L:lightness($border-width )!default;
+$input-btn-border-width-A:alpha($border-width )!default;
+ // For form controls and buttons
+$input-box-shadow:inset 0 1px 1px rgba($black,.075) ;
+$input-box-shadow-R:red(inset 0 1px 1px rgba($black,.075) )!default;
+$input-box-shadow-G:green(inset 0 1px 1px rgba($black,.075) )!default;
+$input-box-shadow-B:blue(inset 0 1px 1px rgba($black,.075) )!default;
+$input-box-shadow-H:hue(inset 0 1px 1px rgba($black,.075) )!default;
+$input-box-shadow-S:saturation(inset 0 1px 1px rgba($black,.075) )!default;
+$input-box-shadow-L:lightness(inset 0 1px 1px rgba($black,.075) )!default;
+$input-box-shadow-A:alpha(inset 0 1px 1px rgba($black,.075) )!default;
+
+
+$input-border-radius:$border-radius ;
+$input-border-radius-R:red($border-radius )!default;
+$input-border-radius-G:green($border-radius )!default;
+$input-border-radius-B:blue($border-radius )!default;
+$input-border-radius-H:hue($border-radius )!default;
+$input-border-radius-S:saturation($border-radius )!default;
+$input-border-radius-L:lightness($border-radius )!default;
+$input-border-radius-A:alpha($border-radius )!default;
+
+$input-border-radius-lg:$border-radius-lg ;
+$input-border-radius-lg-R:red($border-radius-lg )!default;
+$input-border-radius-lg-G:green($border-radius-lg )!default;
+$input-border-radius-lg-B:blue($border-radius-lg )!default;
+$input-border-radius-lg-H:hue($border-radius-lg )!default;
+$input-border-radius-lg-S:saturation($border-radius-lg )!default;
+$input-border-radius-lg-L:lightness($border-radius-lg )!default;
+$input-border-radius-lg-A:alpha($border-radius-lg )!default;
+
+$input-border-radius-sm:$border-radius-sm ;
+$input-border-radius-sm-R:red($border-radius-sm )!default;
+$input-border-radius-sm-G:green($border-radius-sm )!default;
+$input-border-radius-sm-B:blue($border-radius-sm )!default;
+$input-border-radius-sm-H:hue($border-radius-sm )!default;
+$input-border-radius-sm-S:saturation($border-radius-sm )!default;
+$input-border-radius-sm-L:lightness($border-radius-sm )!default;
+$input-border-radius-sm-A:alpha($border-radius-sm )!default;
+
+
+$input-bg-focus:$input-bg ;
+$input-bg-focus-R:red($input-bg )!default;
+$input-bg-focus-G:green($input-bg )!default;
+$input-bg-focus-B:blue($input-bg )!default;
+$input-bg-focus-H:hue($input-bg )!default;
+$input-bg-focus-S:saturation($input-bg )!default;
+$input-bg-focus-L:lightness($input-bg )!default;
+$input-bg-focus-A:alpha($input-bg )!default;
+
+$input-border-focus:lighten($brand-primary, 25%) ;
+$input-border-focus-R:red(lighten($brand-primary, 25%) )!default;
+$input-border-focus-G:green(lighten($brand-primary, 25%) )!default;
+$input-border-focus-B:blue(lighten($brand-primary, 25%) )!default;
+$input-border-focus-H:hue(lighten($brand-primary, 25%) )!default;
+$input-border-focus-S:saturation(lighten($brand-primary, 25%) )!default;
+$input-border-focus-L:lightness(lighten($brand-primary, 25%) )!default;
+$input-border-focus-A:alpha(lighten($brand-primary, 25%) )!default;
+
+$input-box-shadow-focus:$input-box-shadow, rgba($input-border-focus, .6) ;
+$input-box-shadow-focus-R:red($input-box-shadow, rgba($input-border-focus, .6) )!default;
+$input-box-shadow-focus-G:green($input-box-shadow, rgba($input-border-focus, .6) )!default;
+$input-box-shadow-focus-B:blue($input-box-shadow, rgba($input-border-focus, .6) )!default;
+$input-box-shadow-focus-H:hue($input-box-shadow, rgba($input-border-focus, .6) )!default;
+$input-box-shadow-focus-S:saturation($input-box-shadow, rgba($input-border-focus, .6) )!default;
+$input-box-shadow-focus-L:lightness($input-box-shadow, rgba($input-border-focus, .6) )!default;
+$input-box-shadow-focus-A:alpha($input-box-shadow, rgba($input-border-focus, .6) )!default;
+
+$input-color-focus:$input-color ;
+$input-color-focus-R:red($input-color )!default;
+$input-color-focus-G:green($input-color )!default;
+$input-color-focus-B:blue($input-color )!default;
+$input-color-focus-H:hue($input-color )!default;
+$input-color-focus-S:saturation($input-color )!default;
+$input-color-focus-L:lightness($input-color )!default;
+$input-color-focus-A:alpha($input-color )!default;
+
+
+$input-color-placeholder:$gray-light ;
+$input-color-placeholder-R:red($gray-light )!default;
+$input-color-placeholder-G:green($gray-light )!default;
+$input-color-placeholder-B:blue($gray-light )!default;
+$input-color-placeholder-H:hue($gray-light )!default;
+$input-color-placeholder-S:saturation($gray-light )!default;
+$input-color-placeholder-L:lightness($gray-light )!default;
+$input-color-placeholder-A:alpha($gray-light )!default;
+
+
+$input-padding-x-sm:.5rem ;
+
+$input-padding-y-sm:.25rem ;
+
+
+$input-padding-x-lg:1.5rem ;
+
+$input-padding-y-lg:.75rem ;
+
+
+$input-height:(($font-size-base * $input-line-height) + ($input-padding-y * 2)) ;
+$input-height-R:red((($font-size-base * $input-line-height) + ($input-padding-y * 2)) )!default;
+$input-height-G:green((($font-size-base * $input-line-height) + ($input-padding-y * 2)) )!default;
+$input-height-B:blue((($font-size-base * $input-line-height) + ($input-padding-y * 2)) )!default;
+$input-height-H:hue((($font-size-base * $input-line-height) + ($input-padding-y * 2)) )!default;
+$input-height-S:saturation((($font-size-base * $input-line-height) + ($input-padding-y * 2)) )!default;
+$input-height-L:lightness((($font-size-base * $input-line-height) + ($input-padding-y * 2)) )!default;
+$input-height-A:alpha((($font-size-base * $input-line-height) + ($input-padding-y * 2)) )!default;
+
+$input-height-lg:(($font-size-lg * $line-height-lg) + ($input-padding-y-lg * 2)) ;
+$input-height-lg-R:red((($font-size-lg * $line-height-lg) + ($input-padding-y-lg * 2)) )!default;
+$input-height-lg-G:green((($font-size-lg * $line-height-lg) + ($input-padding-y-lg * 2)) )!default;
+$input-height-lg-B:blue((($font-size-lg * $line-height-lg) + ($input-padding-y-lg * 2)) )!default;
+$input-height-lg-H:hue((($font-size-lg * $line-height-lg) + ($input-padding-y-lg * 2)) )!default;
+$input-height-lg-S:saturation((($font-size-lg * $line-height-lg) + ($input-padding-y-lg * 2)) )!default;
+$input-height-lg-L:lightness((($font-size-lg * $line-height-lg) + ($input-padding-y-lg * 2)) )!default;
+$input-height-lg-A:alpha((($font-size-lg * $line-height-lg) + ($input-padding-y-lg * 2)) )!default;
+
+$input-height-sm:(($font-size-sm * $line-height-sm) + ($input-padding-y-sm * 2)) ;
+$input-height-sm-R:red((($font-size-sm * $line-height-sm) + ($input-padding-y-sm * 2)) )!default;
+$input-height-sm-G:green((($font-size-sm * $line-height-sm) + ($input-padding-y-sm * 2)) )!default;
+$input-height-sm-B:blue((($font-size-sm * $line-height-sm) + ($input-padding-y-sm * 2)) )!default;
+$input-height-sm-H:hue((($font-size-sm * $line-height-sm) + ($input-padding-y-sm * 2)) )!default;
+$input-height-sm-S:saturation((($font-size-sm * $line-height-sm) + ($input-padding-y-sm * 2)) )!default;
+$input-height-sm-L:lightness((($font-size-sm * $line-height-sm) + ($input-padding-y-sm * 2)) )!default;
+$input-height-sm-A:alpha((($font-size-sm * $line-height-sm) + ($input-padding-y-sm * 2)) )!default;
+
+
+$input-transition:border-color ease-in-out .15s, box-shadow ease-in-out .15s ;
+
+
+$form-text-margin-top:.25rem ;
+
+$form-feedback-margin-top:$form-text-margin-top ;
+$form-feedback-margin-top-R:red($form-text-margin-top )!default;
+$form-feedback-margin-top-G:green($form-text-margin-top )!default;
+$form-feedback-margin-top-B:blue($form-text-margin-top )!default;
+$form-feedback-margin-top-H:hue($form-text-margin-top )!default;
+$form-feedback-margin-top-S:saturation($form-text-margin-top )!default;
+$form-feedback-margin-top-L:lightness($form-text-margin-top )!default;
+$form-feedback-margin-top-A:alpha($form-text-margin-top )!default;
+
+
+$form-check-margin-bottom:.5rem ;
+
+$form-check-input-gutter:1.25rem ;
+
+$form-check-input-margin-y:.25rem ;
+
+$form-check-input-margin-x:.25rem ;
+
+
+$form-check-inline-margin-x:.75rem ;
+
+
+$form-group-margin-bottom:$spacer-y ;
+$form-group-margin-bottom-R:red($spacer-y )!default;
+$form-group-margin-bottom-G:green($spacer-y )!default;
+$form-group-margin-bottom-B:blue($spacer-y )!default;
+$form-group-margin-bottom-H:hue($spacer-y )!default;
+$form-group-margin-bottom-S:saturation($spacer-y )!default;
+$form-group-margin-bottom-L:lightness($spacer-y )!default;
+$form-group-margin-bottom-A:alpha($spacer-y )!default;
+
+
+$input-group-addon-bg:$gray-lighter ;
+$input-group-addon-bg-R:red($gray-lighter )!default;
+$input-group-addon-bg-G:green($gray-lighter )!default;
+$input-group-addon-bg-B:blue($gray-lighter )!default;
+$input-group-addon-bg-H:hue($gray-lighter )!default;
+$input-group-addon-bg-S:saturation($gray-lighter )!default;
+$input-group-addon-bg-L:lightness($gray-lighter )!default;
+$input-group-addon-bg-A:alpha($gray-lighter )!default;
+
+$input-group-addon-border-color:$input-border-color ;
+$input-group-addon-border-color-R:red($input-border-color )!default;
+$input-group-addon-border-color-G:green($input-border-color )!default;
+$input-group-addon-border-color-B:blue($input-border-color )!default;
+$input-group-addon-border-color-H:hue($input-border-color )!default;
+$input-group-addon-border-color-S:saturation($input-border-color )!default;
+$input-group-addon-border-color-L:lightness($input-border-color )!default;
+$input-group-addon-border-color-A:alpha($input-border-color )!default;
+
+
+$cursor-disabled:not-allowed ;
+
+
+$custom-control-gutter:1.5rem ;
+
+$custom-control-spacer-x:1rem ;
+
+$custom-control-spacer-y:.25rem ;
+
+
+$custom-control-indicator-size:1rem ;
+
+$custom-control-indicator-margin-y:(($line-height-base * 1rem) - $custom-control-indicator-size) / -2 ;
+$custom-control-indicator-margin-y-R:red((($line-height-base * 1rem) - $custom-control-indicator-size) / -2 )!default;
+$custom-control-indicator-margin-y-G:green((($line-height-base * 1rem) - $custom-control-indicator-size) / -2 )!default;
+$custom-control-indicator-margin-y-B:blue((($line-height-base * 1rem) - $custom-control-indicator-size) / -2 )!default;
+$custom-control-indicator-margin-y-H:hue((($line-height-base * 1rem) - $custom-control-indicator-size) / -2 )!default;
+$custom-control-indicator-margin-y-S:saturation((($line-height-base * 1rem) - $custom-control-indicator-size) / -2 )!default;
+$custom-control-indicator-margin-y-L:lightness((($line-height-base * 1rem) - $custom-control-indicator-size) / -2 )!default;
+$custom-control-indicator-margin-y-A:alpha((($line-height-base * 1rem) - $custom-control-indicator-size) / -2 )!default;
+
+$custom-control-indicator-bg:#ddd ;
+$custom-control-indicator-bg-R:red(#ddd )!default;
+$custom-control-indicator-bg-G:green(#ddd )!default;
+$custom-control-indicator-bg-B:blue(#ddd )!default;
+$custom-control-indicator-bg-H:hue(#ddd )!default;
+$custom-control-indicator-bg-S:saturation(#ddd )!default;
+$custom-control-indicator-bg-L:lightness(#ddd )!default;
+$custom-control-indicator-bg-A:alpha(#ddd )!default;
+
+$custom-control-indicator-bg-size:50% 50% ;
+
+$custom-control-indicator-box-shadow:inset 0 .25rem .25rem rgba($black,.1) ;
+$custom-control-indicator-box-shadow-R:red(inset 0 .25rem .25rem rgba($black,.1) )!default;
+$custom-control-indicator-box-shadow-G:green(inset 0 .25rem .25rem rgba($black,.1) )!default;
+$custom-control-indicator-box-shadow-B:blue(inset 0 .25rem .25rem rgba($black,.1) )!default;
+$custom-control-indicator-box-shadow-H:hue(inset 0 .25rem .25rem rgba($black,.1) )!default;
+$custom-control-indicator-box-shadow-S:saturation(inset 0 .25rem .25rem rgba($black,.1) )!default;
+$custom-control-indicator-box-shadow-L:lightness(inset 0 .25rem .25rem rgba($black,.1) )!default;
+$custom-control-indicator-box-shadow-A:alpha(inset 0 .25rem .25rem rgba($black,.1) )!default;
+
+
+$custom-control-disabled-cursor:$cursor-disabled ;
+$custom-control-disabled-cursor-R:red($cursor-disabled )!default;
+$custom-control-disabled-cursor-G:green($cursor-disabled )!default;
+$custom-control-disabled-cursor-B:blue($cursor-disabled )!default;
+$custom-control-disabled-cursor-H:hue($cursor-disabled )!default;
+$custom-control-disabled-cursor-S:saturation($cursor-disabled )!default;
+$custom-control-disabled-cursor-L:lightness($cursor-disabled )!default;
+$custom-control-disabled-cursor-A:alpha($cursor-disabled )!default;
+
+$custom-control-disabled-indicator-bg:$gray-lighter ;
+$custom-control-disabled-indicator-bg-R:red($gray-lighter )!default;
+$custom-control-disabled-indicator-bg-G:green($gray-lighter )!default;
+$custom-control-disabled-indicator-bg-B:blue($gray-lighter )!default;
+$custom-control-disabled-indicator-bg-H:hue($gray-lighter )!default;
+$custom-control-disabled-indicator-bg-S:saturation($gray-lighter )!default;
+$custom-control-disabled-indicator-bg-L:lightness($gray-lighter )!default;
+$custom-control-disabled-indicator-bg-A:alpha($gray-lighter )!default;
+
+$custom-control-disabled-description-color:$gray-light ;
+$custom-control-disabled-description-color-R:red($gray-light )!default;
+$custom-control-disabled-description-color-G:green($gray-light )!default;
+$custom-control-disabled-description-color-B:blue($gray-light )!default;
+$custom-control-disabled-description-color-H:hue($gray-light )!default;
+$custom-control-disabled-description-color-S:saturation($gray-light )!default;
+$custom-control-disabled-description-color-L:lightness($gray-light )!default;
+$custom-control-disabled-description-color-A:alpha($gray-light )!default;
+
+
+$custom-control-checked-indicator-color:$white ;
+$custom-control-checked-indicator-color-R:red($white )!default;
+$custom-control-checked-indicator-color-G:green($white )!default;
+$custom-control-checked-indicator-color-B:blue($white )!default;
+$custom-control-checked-indicator-color-H:hue($white )!default;
+$custom-control-checked-indicator-color-S:saturation($white )!default;
+$custom-control-checked-indicator-color-L:lightness($white )!default;
+$custom-control-checked-indicator-color-A:alpha($white )!default;
+
+$custom-control-checked-indicator-bg:$brand-primary ;
+$custom-control-checked-indicator-bg-R:red($brand-primary )!default;
+$custom-control-checked-indicator-bg-G:green($brand-primary )!default;
+$custom-control-checked-indicator-bg-B:blue($brand-primary )!default;
+$custom-control-checked-indicator-bg-H:hue($brand-primary )!default;
+$custom-control-checked-indicator-bg-S:saturation($brand-primary )!default;
+$custom-control-checked-indicator-bg-L:lightness($brand-primary )!default;
+$custom-control-checked-indicator-bg-A:alpha($brand-primary )!default;
+
+$custom-control-checked-indicator-box-shadow:none ;
+
+
+$custom-control-focus-indicator-box-shadow:0 0 0 1px $body-bg, 0 0 0 3px $brand-primary ;
+$custom-control-focus-indicator-box-shadow-R:red(0 0 0 1px $body-bg, 0 0 0 3px $brand-primary )!default;
+$custom-control-focus-indicator-box-shadow-G:green(0 0 0 1px $body-bg, 0 0 0 3px $brand-primary )!default;
+$custom-control-focus-indicator-box-shadow-B:blue(0 0 0 1px $body-bg, 0 0 0 3px $brand-primary )!default;
+$custom-control-focus-indicator-box-shadow-H:hue(0 0 0 1px $body-bg, 0 0 0 3px $brand-primary )!default;
+$custom-control-focus-indicator-box-shadow-S:saturation(0 0 0 1px $body-bg, 0 0 0 3px $brand-primary )!default;
+$custom-control-focus-indicator-box-shadow-L:lightness(0 0 0 1px $body-bg, 0 0 0 3px $brand-primary )!default;
+$custom-control-focus-indicator-box-shadow-A:alpha(0 0 0 1px $body-bg, 0 0 0 3px $brand-primary )!default;
+
+
+$custom-control-active-indicator-color:$white ;
+$custom-control-active-indicator-color-R:red($white )!default;
+$custom-control-active-indicator-color-G:green($white )!default;
+$custom-control-active-indicator-color-B:blue($white )!default;
+$custom-control-active-indicator-color-H:hue($white )!default;
+$custom-control-active-indicator-color-S:saturation($white )!default;
+$custom-control-active-indicator-color-L:lightness($white )!default;
+$custom-control-active-indicator-color-A:alpha($white )!default;
+
+$custom-control-active-indicator-bg:lighten($brand-primary, 35%) ;
+$custom-control-active-indicator-bg-R:red(lighten($brand-primary, 35%) )!default;
+$custom-control-active-indicator-bg-G:green(lighten($brand-primary, 35%) )!default;
+$custom-control-active-indicator-bg-B:blue(lighten($brand-primary, 35%) )!default;
+$custom-control-active-indicator-bg-H:hue(lighten($brand-primary, 35%) )!default;
+$custom-control-active-indicator-bg-S:saturation(lighten($brand-primary, 35%) )!default;
+$custom-control-active-indicator-bg-L:lightness(lighten($brand-primary, 35%) )!default;
+$custom-control-active-indicator-bg-A:alpha(lighten($brand-primary, 35%) )!default;
+
+$custom-control-active-indicator-box-shadow:none ;
+
+
+$custom-checkbox-radius:$border-radius ;
+$custom-checkbox-radius-R:red($border-radius )!default;
+$custom-checkbox-radius-G:green($border-radius )!default;
+$custom-checkbox-radius-B:blue($border-radius )!default;
+$custom-checkbox-radius-H:hue($border-radius )!default;
+$custom-checkbox-radius-S:saturation($border-radius )!default;
+$custom-checkbox-radius-L:lightness($border-radius )!default;
+$custom-checkbox-radius-A:alpha($border-radius )!default;
+
+$custom-checkbox-checked-icon:str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{$custom-control-checked-indicator-color' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3E%3C/svg%3E"), "#", "%23") ;
+$custom-checkbox-checked-icon-R:red(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{$custom-control-checked-indicator-color' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$custom-checkbox-checked-icon-G:green(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{$custom-control-checked-indicator-color' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$custom-checkbox-checked-icon-B:blue(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{$custom-control-checked-indicator-color' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$custom-checkbox-checked-icon-H:hue(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{$custom-control-checked-indicator-color' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$custom-checkbox-checked-icon-S:saturation(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{$custom-control-checked-indicator-color' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$custom-checkbox-checked-icon-L:lightness(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{$custom-control-checked-indicator-color' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$custom-checkbox-checked-icon-A:alpha(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{$custom-control-checked-indicator-color' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+
+
+$custom-checkbox-indeterminate-bg:$brand-primary ;
+$custom-checkbox-indeterminate-bg-R:red($brand-primary )!default;
+$custom-checkbox-indeterminate-bg-G:green($brand-primary )!default;
+$custom-checkbox-indeterminate-bg-B:blue($brand-primary )!default;
+$custom-checkbox-indeterminate-bg-H:hue($brand-primary )!default;
+$custom-checkbox-indeterminate-bg-S:saturation($brand-primary )!default;
+$custom-checkbox-indeterminate-bg-L:lightness($brand-primary )!default;
+$custom-checkbox-indeterminate-bg-A:alpha($brand-primary )!default;
+
+$custom-checkbox-indeterminate-indicator-color:$custom-control-checked-indicator-color ;
+$custom-checkbox-indeterminate-indicator-color-R:red($custom-control-checked-indicator-color )!default;
+$custom-checkbox-indeterminate-indicator-color-G:green($custom-control-checked-indicator-color )!default;
+$custom-checkbox-indeterminate-indicator-color-B:blue($custom-control-checked-indicator-color )!default;
+$custom-checkbox-indeterminate-indicator-color-H:hue($custom-control-checked-indicator-color )!default;
+$custom-checkbox-indeterminate-indicator-color-S:saturation($custom-control-checked-indicator-color )!default;
+$custom-checkbox-indeterminate-indicator-color-L:lightness($custom-control-checked-indicator-color )!default;
+$custom-checkbox-indeterminate-indicator-color-A:alpha($custom-control-checked-indicator-color )!default;
+
+$custom-checkbox-indeterminate-icon:str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 4'%3E%3Cpath stroke='#{$custom-checkbox-indeterminate-indicator-color' d='M0 2h4'/%3E%3C/svg%3E"), "#", "%23") ;
+$custom-checkbox-indeterminate-icon-R:red(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 4'%3E%3Cpath stroke='#{$custom-checkbox-indeterminate-indicator-color' d='M0 2h4'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$custom-checkbox-indeterminate-icon-G:green(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 4'%3E%3Cpath stroke='#{$custom-checkbox-indeterminate-indicator-color' d='M0 2h4'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$custom-checkbox-indeterminate-icon-B:blue(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 4'%3E%3Cpath stroke='#{$custom-checkbox-indeterminate-indicator-color' d='M0 2h4'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$custom-checkbox-indeterminate-icon-H:hue(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 4'%3E%3Cpath stroke='#{$custom-checkbox-indeterminate-indicator-color' d='M0 2h4'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$custom-checkbox-indeterminate-icon-S:saturation(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 4'%3E%3Cpath stroke='#{$custom-checkbox-indeterminate-indicator-color' d='M0 2h4'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$custom-checkbox-indeterminate-icon-L:lightness(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 4'%3E%3Cpath stroke='#{$custom-checkbox-indeterminate-indicator-color' d='M0 2h4'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$custom-checkbox-indeterminate-icon-A:alpha(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 4'%3E%3Cpath stroke='#{$custom-checkbox-indeterminate-indicator-color' d='M0 2h4'/%3E%3C/svg%3E"), "#", "%23") )!default;
+
+$custom-checkbox-indeterminate-box-shadow:none ;
+
+
+$custom-radio-radius:50% ;
+
+$custom-radio-checked-icon:str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3E%3Ccircle r='3' fill='#{$custom-control-checked-indicator-color'/%3E%3C/svg%3E"), "#", "%23") ;
+$custom-radio-checked-icon-R:red(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3E%3Ccircle r='3' fill='#{$custom-control-checked-indicator-color'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$custom-radio-checked-icon-G:green(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3E%3Ccircle r='3' fill='#{$custom-control-checked-indicator-color'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$custom-radio-checked-icon-B:blue(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3E%3Ccircle r='3' fill='#{$custom-control-checked-indicator-color'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$custom-radio-checked-icon-H:hue(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3E%3Ccircle r='3' fill='#{$custom-control-checked-indicator-color'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$custom-radio-checked-icon-S:saturation(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3E%3Ccircle r='3' fill='#{$custom-control-checked-indicator-color'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$custom-radio-checked-icon-L:lightness(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3E%3Ccircle r='3' fill='#{$custom-control-checked-indicator-color'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$custom-radio-checked-icon-A:alpha(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3E%3Ccircle r='3' fill='#{$custom-control-checked-indicator-color'/%3E%3C/svg%3E"), "#", "%23") )!default;
+
+
+$custom-select-padding-x:.75rem  ;
+
+$custom-select-padding-y:.375rem ;
+
+$custom-select-indicator-padding:1rem ;
+ // Extra padding to account for the presence of the background-image based indicator
+$custom-select-line-height:$input-line-height ;
+$custom-select-line-height-R:red($input-line-height )!default;
+$custom-select-line-height-G:green($input-line-height )!default;
+$custom-select-line-height-B:blue($input-line-height )!default;
+$custom-select-line-height-H:hue($input-line-height )!default;
+$custom-select-line-height-S:saturation($input-line-height )!default;
+$custom-select-line-height-L:lightness($input-line-height )!default;
+$custom-select-line-height-A:alpha($input-line-height )!default;
+
+$custom-select-color:$input-color ;
+$custom-select-color-R:red($input-color )!default;
+$custom-select-color-G:green($input-color )!default;
+$custom-select-color-B:blue($input-color )!default;
+$custom-select-color-H:hue($input-color )!default;
+$custom-select-color-S:saturation($input-color )!default;
+$custom-select-color-L:lightness($input-color )!default;
+$custom-select-color-A:alpha($input-color )!default;
+
+$custom-select-disabled-color:$gray-light ;
+$custom-select-disabled-color-R:red($gray-light )!default;
+$custom-select-disabled-color-G:green($gray-light )!default;
+$custom-select-disabled-color-B:blue($gray-light )!default;
+$custom-select-disabled-color-H:hue($gray-light )!default;
+$custom-select-disabled-color-S:saturation($gray-light )!default;
+$custom-select-disabled-color-L:lightness($gray-light )!default;
+$custom-select-disabled-color-A:alpha($gray-light )!default;
+
+$custom-select-bg:$white ;
+$custom-select-bg-R:red($white )!default;
+$custom-select-bg-G:green($white )!default;
+$custom-select-bg-B:blue($white )!default;
+$custom-select-bg-H:hue($white )!default;
+$custom-select-bg-S:saturation($white )!default;
+$custom-select-bg-L:lightness($white )!default;
+$custom-select-bg-A:alpha($white )!default;
+
+$custom-select-disabled-bg:$gray-lighter ;
+$custom-select-disabled-bg-R:red($gray-lighter )!default;
+$custom-select-disabled-bg-G:green($gray-lighter )!default;
+$custom-select-disabled-bg-B:blue($gray-lighter )!default;
+$custom-select-disabled-bg-H:hue($gray-lighter )!default;
+$custom-select-disabled-bg-S:saturation($gray-lighter )!default;
+$custom-select-disabled-bg-L:lightness($gray-lighter )!default;
+$custom-select-disabled-bg-A:alpha($gray-lighter )!default;
+
+$custom-select-bg-size:8px 10px ;
+ // In pixels because image dimensions
+$custom-select-indicator-color:#333 ;
+$custom-select-indicator-color-R:red(#333 )!default;
+$custom-select-indicator-color-G:green(#333 )!default;
+$custom-select-indicator-color-B:blue(#333 )!default;
+$custom-select-indicator-color-H:hue(#333 )!default;
+$custom-select-indicator-color-S:saturation(#333 )!default;
+$custom-select-indicator-color-L:lightness(#333 )!default;
+$custom-select-indicator-color-A:alpha(#333 )!default;
+
+$custom-select-indicator:str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='#{$custom-select-indicator-color' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E"), "#", "%23") ;
+$custom-select-indicator-R:red(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='#{$custom-select-indicator-color' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$custom-select-indicator-G:green(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='#{$custom-select-indicator-color' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$custom-select-indicator-B:blue(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='#{$custom-select-indicator-color' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$custom-select-indicator-H:hue(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='#{$custom-select-indicator-color' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$custom-select-indicator-S:saturation(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='#{$custom-select-indicator-color' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$custom-select-indicator-L:lightness(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='#{$custom-select-indicator-color' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$custom-select-indicator-A:alpha(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='#{$custom-select-indicator-color' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+
+$custom-select-border-width:$input-btn-border-width ;
+$custom-select-border-width-R:red($input-btn-border-width )!default;
+$custom-select-border-width-G:green($input-btn-border-width )!default;
+$custom-select-border-width-B:blue($input-btn-border-width )!default;
+$custom-select-border-width-H:hue($input-btn-border-width )!default;
+$custom-select-border-width-S:saturation($input-btn-border-width )!default;
+$custom-select-border-width-L:lightness($input-btn-border-width )!default;
+$custom-select-border-width-A:alpha($input-btn-border-width )!default;
+
+$custom-select-border-color:$input-border-color ;
+$custom-select-border-color-R:red($input-border-color )!default;
+$custom-select-border-color-G:green($input-border-color )!default;
+$custom-select-border-color-B:blue($input-border-color )!default;
+$custom-select-border-color-H:hue($input-border-color )!default;
+$custom-select-border-color-S:saturation($input-border-color )!default;
+$custom-select-border-color-L:lightness($input-border-color )!default;
+$custom-select-border-color-A:alpha($input-border-color )!default;
+
+$custom-select-border-radius:$border-radius ;
+$custom-select-border-radius-R:red($border-radius )!default;
+$custom-select-border-radius-G:green($border-radius )!default;
+$custom-select-border-radius-B:blue($border-radius )!default;
+$custom-select-border-radius-H:hue($border-radius )!default;
+$custom-select-border-radius-S:saturation($border-radius )!default;
+$custom-select-border-radius-L:lightness($border-radius )!default;
+$custom-select-border-radius-A:alpha($border-radius )!default;
+
+
+$custom-select-focus-border-color:lighten($brand-primary, 25%) ;
+$custom-select-focus-border-color-R:red(lighten($brand-primary, 25%) )!default;
+$custom-select-focus-border-color-G:green(lighten($brand-primary, 25%) )!default;
+$custom-select-focus-border-color-B:blue(lighten($brand-primary, 25%) )!default;
+$custom-select-focus-border-color-H:hue(lighten($brand-primary, 25%) )!default;
+$custom-select-focus-border-color-S:saturation(lighten($brand-primary, 25%) )!default;
+$custom-select-focus-border-color-L:lightness(lighten($brand-primary, 25%) )!default;
+$custom-select-focus-border-color-A:alpha(lighten($brand-primary, 25%) )!default;
+
+$custom-select-focus-box-shadow:inset 0 1px 2px rgba($black, .075), 0 0 5px rgba($custom-select-focus-border-color, .5) ;
+$custom-select-focus-box-shadow-R:red(inset 0 1px 2px rgba($black, .075), 0 0 5px rgba($custom-select-focus-border-color, .5) )!default;
+$custom-select-focus-box-shadow-G:green(inset 0 1px 2px rgba($black, .075), 0 0 5px rgba($custom-select-focus-border-color, .5) )!default;
+$custom-select-focus-box-shadow-B:blue(inset 0 1px 2px rgba($black, .075), 0 0 5px rgba($custom-select-focus-border-color, .5) )!default;
+$custom-select-focus-box-shadow-H:hue(inset 0 1px 2px rgba($black, .075), 0 0 5px rgba($custom-select-focus-border-color, .5) )!default;
+$custom-select-focus-box-shadow-S:saturation(inset 0 1px 2px rgba($black, .075), 0 0 5px rgba($custom-select-focus-border-color, .5) )!default;
+$custom-select-focus-box-shadow-L:lightness(inset 0 1px 2px rgba($black, .075), 0 0 5px rgba($custom-select-focus-border-color, .5) )!default;
+$custom-select-focus-box-shadow-A:alpha(inset 0 1px 2px rgba($black, .075), 0 0 5px rgba($custom-select-focus-border-color, .5) )!default;
+
+
+$custom-select-sm-padding-y:.2rem ;
+
+$custom-select-sm-font-size:75% ;
+
+
+$custom-file-height:2.5rem ;
+
+$custom-file-width:14rem ;
+
+$custom-file-focus-box-shadow:0 0 0 .075rem $white, 0 0 0 .2rem $brand-primary ;
+$custom-file-focus-box-shadow-R:red(0 0 0 .075rem $white, 0 0 0 .2rem $brand-primary )!default;
+$custom-file-focus-box-shadow-G:green(0 0 0 .075rem $white, 0 0 0 .2rem $brand-primary )!default;
+$custom-file-focus-box-shadow-B:blue(0 0 0 .075rem $white, 0 0 0 .2rem $brand-primary )!default;
+$custom-file-focus-box-shadow-H:hue(0 0 0 .075rem $white, 0 0 0 .2rem $brand-primary )!default;
+$custom-file-focus-box-shadow-S:saturation(0 0 0 .075rem $white, 0 0 0 .2rem $brand-primary )!default;
+$custom-file-focus-box-shadow-L:lightness(0 0 0 .075rem $white, 0 0 0 .2rem $brand-primary )!default;
+$custom-file-focus-box-shadow-A:alpha(0 0 0 .075rem $white, 0 0 0 .2rem $brand-primary )!default;
+
+
+$custom-file-padding-x:.5rem ;
+
+$custom-file-padding-y:1rem ;
+
+$custom-file-line-height:1.5 ;
+
+$custom-file-color:$gray ;
+$custom-file-color-R:red($gray )!default;
+$custom-file-color-G:green($gray )!default;
+$custom-file-color-B:blue($gray )!default;
+$custom-file-color-H:hue($gray )!default;
+$custom-file-color-S:saturation($gray )!default;
+$custom-file-color-L:lightness($gray )!default;
+$custom-file-color-A:alpha($gray )!default;
+
+$custom-file-bg:$white ;
+$custom-file-bg-R:red($white )!default;
+$custom-file-bg-G:green($white )!default;
+$custom-file-bg-B:blue($white )!default;
+$custom-file-bg-H:hue($white )!default;
+$custom-file-bg-S:saturation($white )!default;
+$custom-file-bg-L:lightness($white )!default;
+$custom-file-bg-A:alpha($white )!default;
+
+$custom-file-border-width:$border-width ;
+$custom-file-border-width-R:red($border-width )!default;
+$custom-file-border-width-G:green($border-width )!default;
+$custom-file-border-width-B:blue($border-width )!default;
+$custom-file-border-width-H:hue($border-width )!default;
+$custom-file-border-width-S:saturation($border-width )!default;
+$custom-file-border-width-L:lightness($border-width )!default;
+$custom-file-border-width-A:alpha($border-width )!default;
+
+$custom-file-border-color:$input-border-color ;
+$custom-file-border-color-R:red($input-border-color )!default;
+$custom-file-border-color-G:green($input-border-color )!default;
+$custom-file-border-color-B:blue($input-border-color )!default;
+$custom-file-border-color-H:hue($input-border-color )!default;
+$custom-file-border-color-S:saturation($input-border-color )!default;
+$custom-file-border-color-L:lightness($input-border-color )!default;
+$custom-file-border-color-A:alpha($input-border-color )!default;
+
+$custom-file-border-radius:$border-radius ;
+$custom-file-border-radius-R:red($border-radius )!default;
+$custom-file-border-radius-G:green($border-radius )!default;
+$custom-file-border-radius-B:blue($border-radius )!default;
+$custom-file-border-radius-H:hue($border-radius )!default;
+$custom-file-border-radius-S:saturation($border-radius )!default;
+$custom-file-border-radius-L:lightness($border-radius )!default;
+$custom-file-border-radius-A:alpha($border-radius )!default;
+
+$custom-file-box-shadow:inset 0 .2rem .4rem rgba($black,.05) ;
+$custom-file-box-shadow-R:red(inset 0 .2rem .4rem rgba($black,.05) )!default;
+$custom-file-box-shadow-G:green(inset 0 .2rem .4rem rgba($black,.05) )!default;
+$custom-file-box-shadow-B:blue(inset 0 .2rem .4rem rgba($black,.05) )!default;
+$custom-file-box-shadow-H:hue(inset 0 .2rem .4rem rgba($black,.05) )!default;
+$custom-file-box-shadow-S:saturation(inset 0 .2rem .4rem rgba($black,.05) )!default;
+$custom-file-box-shadow-L:lightness(inset 0 .2rem .4rem rgba($black,.05) )!default;
+$custom-file-box-shadow-A:alpha(inset 0 .2rem .4rem rgba($black,.05) )!default;
+
+$custom-file-button-color:$custom-file-color ;
+$custom-file-button-color-R:red($custom-file-color )!default;
+$custom-file-button-color-G:green($custom-file-color )!default;
+$custom-file-button-color-B:blue($custom-file-color )!default;
+$custom-file-button-color-H:hue($custom-file-color )!default;
+$custom-file-button-color-S:saturation($custom-file-color )!default;
+$custom-file-button-color-L:lightness($custom-file-color )!default;
+$custom-file-button-color-A:alpha($custom-file-color )!default;
+
+$custom-file-button-bg:$gray-lighter ;
+$custom-file-button-bg-R:red($gray-lighter )!default;
+$custom-file-button-bg-G:green($gray-lighter )!default;
+$custom-file-button-bg-B:blue($gray-lighter )!default;
+$custom-file-button-bg-H:hue($gray-lighter )!default;
+$custom-file-button-bg-S:saturation($gray-lighter )!default;
+$custom-file-button-bg-L:lightness($gray-lighter )!default;
+$custom-file-button-bg-A:alpha($gray-lighter )!default;
+
+$custom-file-text:(
+  placeholder: (
+    en: "Choose file..."
+  ),
+  button-label: (
+    en: "Browse"
+  )
+) ;
+
+
+
+// Form validation icons
+$form-icon-success-color:$brand-success ;
+$form-icon-success-color-R:red($brand-success )!default;
+$form-icon-success-color-G:green($brand-success )!default;
+$form-icon-success-color-B:blue($brand-success )!default;
+$form-icon-success-color-H:hue($brand-success )!default;
+$form-icon-success-color-S:saturation($brand-success )!default;
+$form-icon-success-color-L:lightness($brand-success )!default;
+$form-icon-success-color-A:alpha($brand-success )!default;
+
+$form-icon-success:str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{$form-icon-success-color' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3E%3C/svg%3E"), "#", "%23") ;
+$form-icon-success-R:red(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{$form-icon-success-color' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$form-icon-success-G:green(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{$form-icon-success-color' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$form-icon-success-B:blue(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{$form-icon-success-color' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$form-icon-success-H:hue(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{$form-icon-success-color' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$form-icon-success-S:saturation(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{$form-icon-success-color' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$form-icon-success-L:lightness(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{$form-icon-success-color' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$form-icon-success-A:alpha(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{$form-icon-success-color' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+
+
+$form-icon-warning-color:$brand-warning ;
+$form-icon-warning-color-R:red($brand-warning )!default;
+$form-icon-warning-color-G:green($brand-warning )!default;
+$form-icon-warning-color-B:blue($brand-warning )!default;
+$form-icon-warning-color-H:hue($brand-warning )!default;
+$form-icon-warning-color-S:saturation($brand-warning )!default;
+$form-icon-warning-color-L:lightness($brand-warning )!default;
+$form-icon-warning-color-A:alpha($brand-warning )!default;
+
+$form-icon-warning:str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{$form-icon-warning-color' d='M4.4 5.324h-.8v-2.46h.8zm0 1.42h-.8V5.89h.8zM3.76.63L.04 7.075c-.115.2.016.425.26.426h7.397c.242 0 .372-.226.258-.426C6.726 4.924 5.47 2.79 4.253.63c-.113-.174-.39-.174-.494 0z'/%3E%3C/svg%3E"), "#", "%23") ;
+$form-icon-warning-R:red(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{$form-icon-warning-color' d='M4.4 5.324h-.8v-2.46h.8zm0 1.42h-.8V5.89h.8zM3.76.63L.04 7.075c-.115.2.016.425.26.426h7.397c.242 0 .372-.226.258-.426C6.726 4.924 5.47 2.79 4.253.63c-.113-.174-.39-.174-.494 0z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$form-icon-warning-G:green(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{$form-icon-warning-color' d='M4.4 5.324h-.8v-2.46h.8zm0 1.42h-.8V5.89h.8zM3.76.63L.04 7.075c-.115.2.016.425.26.426h7.397c.242 0 .372-.226.258-.426C6.726 4.924 5.47 2.79 4.253.63c-.113-.174-.39-.174-.494 0z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$form-icon-warning-B:blue(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{$form-icon-warning-color' d='M4.4 5.324h-.8v-2.46h.8zm0 1.42h-.8V5.89h.8zM3.76.63L.04 7.075c-.115.2.016.425.26.426h7.397c.242 0 .372-.226.258-.426C6.726 4.924 5.47 2.79 4.253.63c-.113-.174-.39-.174-.494 0z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$form-icon-warning-H:hue(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{$form-icon-warning-color' d='M4.4 5.324h-.8v-2.46h.8zm0 1.42h-.8V5.89h.8zM3.76.63L.04 7.075c-.115.2.016.425.26.426h7.397c.242 0 .372-.226.258-.426C6.726 4.924 5.47 2.79 4.253.63c-.113-.174-.39-.174-.494 0z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$form-icon-warning-S:saturation(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{$form-icon-warning-color' d='M4.4 5.324h-.8v-2.46h.8zm0 1.42h-.8V5.89h.8zM3.76.63L.04 7.075c-.115.2.016.425.26.426h7.397c.242 0 .372-.226.258-.426C6.726 4.924 5.47 2.79 4.253.63c-.113-.174-.39-.174-.494 0z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$form-icon-warning-L:lightness(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{$form-icon-warning-color' d='M4.4 5.324h-.8v-2.46h.8zm0 1.42h-.8V5.89h.8zM3.76.63L.04 7.075c-.115.2.016.425.26.426h7.397c.242 0 .372-.226.258-.426C6.726 4.924 5.47 2.79 4.253.63c-.113-.174-.39-.174-.494 0z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$form-icon-warning-A:alpha(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{$form-icon-warning-color' d='M4.4 5.324h-.8v-2.46h.8zm0 1.42h-.8V5.89h.8zM3.76.63L.04 7.075c-.115.2.016.425.26.426h7.397c.242 0 .372-.226.258-.426C6.726 4.924 5.47 2.79 4.253.63c-.113-.174-.39-.174-.494 0z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+
+
+$form-icon-danger-color:$brand-danger ;
+$form-icon-danger-color-R:red($brand-danger )!default;
+$form-icon-danger-color-G:green($brand-danger )!default;
+$form-icon-danger-color-B:blue($brand-danger )!default;
+$form-icon-danger-color-H:hue($brand-danger )!default;
+$form-icon-danger-color-S:saturation($brand-danger )!default;
+$form-icon-danger-color-L:lightness($brand-danger )!default;
+$form-icon-danger-color-A:alpha($brand-danger )!default;
+
+$form-icon-danger:str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{$form-icon-danger-color' viewBox='-2 -2 7 7'%3E%3Cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3E%3Ccircle r='.5'/%3E%3Ccircle cx='3' r='.5'/%3E%3Ccircle cy='3' r='.5'/%3E%3Ccircle cx='3' cy='3' r='.5'/%3E%3C/svg%3E"), "#", "%23") ;
+$form-icon-danger-R:red(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{$form-icon-danger-color' viewBox='-2 -2 7 7'%3E%3Cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3E%3Ccircle r='.5'/%3E%3Ccircle cx='3' r='.5'/%3E%3Ccircle cy='3' r='.5'/%3E%3Ccircle cx='3' cy='3' r='.5'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$form-icon-danger-G:green(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{$form-icon-danger-color' viewBox='-2 -2 7 7'%3E%3Cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3E%3Ccircle r='.5'/%3E%3Ccircle cx='3' r='.5'/%3E%3Ccircle cy='3' r='.5'/%3E%3Ccircle cx='3' cy='3' r='.5'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$form-icon-danger-B:blue(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{$form-icon-danger-color' viewBox='-2 -2 7 7'%3E%3Cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3E%3Ccircle r='.5'/%3E%3Ccircle cx='3' r='.5'/%3E%3Ccircle cy='3' r='.5'/%3E%3Ccircle cx='3' cy='3' r='.5'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$form-icon-danger-H:hue(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{$form-icon-danger-color' viewBox='-2 -2 7 7'%3E%3Cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3E%3Ccircle r='.5'/%3E%3Ccircle cx='3' r='.5'/%3E%3Ccircle cy='3' r='.5'/%3E%3Ccircle cx='3' cy='3' r='.5'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$form-icon-danger-S:saturation(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{$form-icon-danger-color' viewBox='-2 -2 7 7'%3E%3Cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3E%3Ccircle r='.5'/%3E%3Ccircle cx='3' r='.5'/%3E%3Ccircle cy='3' r='.5'/%3E%3Ccircle cx='3' cy='3' r='.5'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$form-icon-danger-L:lightness(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{$form-icon-danger-color' viewBox='-2 -2 7 7'%3E%3Cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3E%3Ccircle r='.5'/%3E%3Ccircle cx='3' r='.5'/%3E%3Ccircle cy='3' r='.5'/%3E%3Ccircle cx='3' cy='3' r='.5'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$form-icon-danger-A:alpha(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{$form-icon-danger-color' viewBox='-2 -2 7 7'%3E%3Cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3E%3Ccircle r='.5'/%3E%3Ccircle cx='3' r='.5'/%3E%3Ccircle cy='3' r='.5'/%3E%3Ccircle cx='3' cy='3' r='.5'/%3E%3C/svg%3E"), "#", "%23") )!default;
+
+
+
+// Dropdowns
+//
+// Dropdown menu container and contents.
+
+$dropdown-min-width:10rem ;
+
+$dropdown-padding-y:.5rem ;
+
+$dropdown-margin-top:.125rem ;
+
+$dropdown-bg:$white ;
+$dropdown-bg-R:red($white )!default;
+$dropdown-bg-G:green($white )!default;
+$dropdown-bg-B:blue($white )!default;
+$dropdown-bg-H:hue($white )!default;
+$dropdown-bg-S:saturation($white )!default;
+$dropdown-bg-L:lightness($white )!default;
+$dropdown-bg-A:alpha($white )!default;
+
+$dropdown-border-color:rgba($black,.15) ;
+$dropdown-border-color-R:red(rgba($black,.15) )!default;
+$dropdown-border-color-G:green(rgba($black,.15) )!default;
+$dropdown-border-color-B:blue(rgba($black,.15) )!default;
+$dropdown-border-color-H:hue(rgba($black,.15) )!default;
+$dropdown-border-color-S:saturation(rgba($black,.15) )!default;
+$dropdown-border-color-L:lightness(rgba($black,.15) )!default;
+$dropdown-border-color-A:alpha(rgba($black,.15) )!default;
+
+$dropdown-border-width:$border-width ;
+$dropdown-border-width-R:red($border-width )!default;
+$dropdown-border-width-G:green($border-width )!default;
+$dropdown-border-width-B:blue($border-width )!default;
+$dropdown-border-width-H:hue($border-width )!default;
+$dropdown-border-width-S:saturation($border-width )!default;
+$dropdown-border-width-L:lightness($border-width )!default;
+$dropdown-border-width-A:alpha($border-width )!default;
+
+$dropdown-divider-bg:$gray-lighter ;
+$dropdown-divider-bg-R:red($gray-lighter )!default;
+$dropdown-divider-bg-G:green($gray-lighter )!default;
+$dropdown-divider-bg-B:blue($gray-lighter )!default;
+$dropdown-divider-bg-H:hue($gray-lighter )!default;
+$dropdown-divider-bg-S:saturation($gray-lighter )!default;
+$dropdown-divider-bg-L:lightness($gray-lighter )!default;
+$dropdown-divider-bg-A:alpha($gray-lighter )!default;
+
+$dropdown-box-shadow:0 .5rem 1rem rgba($black,.175) ;
+$dropdown-box-shadow-R:red(0 .5rem 1rem rgba($black,.175) )!default;
+$dropdown-box-shadow-G:green(0 .5rem 1rem rgba($black,.175) )!default;
+$dropdown-box-shadow-B:blue(0 .5rem 1rem rgba($black,.175) )!default;
+$dropdown-box-shadow-H:hue(0 .5rem 1rem rgba($black,.175) )!default;
+$dropdown-box-shadow-S:saturation(0 .5rem 1rem rgba($black,.175) )!default;
+$dropdown-box-shadow-L:lightness(0 .5rem 1rem rgba($black,.175) )!default;
+$dropdown-box-shadow-A:alpha(0 .5rem 1rem rgba($black,.175) )!default;
+
+
+$dropdown-link-color:$gray-dark ;
+$dropdown-link-color-R:red($gray-dark )!default;
+$dropdown-link-color-G:green($gray-dark )!default;
+$dropdown-link-color-B:blue($gray-dark )!default;
+$dropdown-link-color-H:hue($gray-dark )!default;
+$dropdown-link-color-S:saturation($gray-dark )!default;
+$dropdown-link-color-L:lightness($gray-dark )!default;
+$dropdown-link-color-A:alpha($gray-dark )!default;
+
+$dropdown-link-hover-color:darken($gray-dark, 5%) ;
+$dropdown-link-hover-color-R:red(darken($gray-dark, 5%) )!default;
+$dropdown-link-hover-color-G:green(darken($gray-dark, 5%) )!default;
+$dropdown-link-hover-color-B:blue(darken($gray-dark, 5%) )!default;
+$dropdown-link-hover-color-H:hue(darken($gray-dark, 5%) )!default;
+$dropdown-link-hover-color-S:saturation(darken($gray-dark, 5%) )!default;
+$dropdown-link-hover-color-L:lightness(darken($gray-dark, 5%) )!default;
+$dropdown-link-hover-color-A:alpha(darken($gray-dark, 5%) )!default;
+
+$dropdown-link-hover-bg:$gray-lightest ;
+$dropdown-link-hover-bg-R:red($gray-lightest )!default;
+$dropdown-link-hover-bg-G:green($gray-lightest )!default;
+$dropdown-link-hover-bg-B:blue($gray-lightest )!default;
+$dropdown-link-hover-bg-H:hue($gray-lightest )!default;
+$dropdown-link-hover-bg-S:saturation($gray-lightest )!default;
+$dropdown-link-hover-bg-L:lightness($gray-lightest )!default;
+$dropdown-link-hover-bg-A:alpha($gray-lightest )!default;
+
+
+$dropdown-link-active-color:$component-active-color ;
+$dropdown-link-active-color-R:red($component-active-color )!default;
+$dropdown-link-active-color-G:green($component-active-color )!default;
+$dropdown-link-active-color-B:blue($component-active-color )!default;
+$dropdown-link-active-color-H:hue($component-active-color )!default;
+$dropdown-link-active-color-S:saturation($component-active-color )!default;
+$dropdown-link-active-color-L:lightness($component-active-color )!default;
+$dropdown-link-active-color-A:alpha($component-active-color )!default;
+
+$dropdown-link-active-bg:$component-active-bg ;
+$dropdown-link-active-bg-R:red($component-active-bg )!default;
+$dropdown-link-active-bg-G:green($component-active-bg )!default;
+$dropdown-link-active-bg-B:blue($component-active-bg )!default;
+$dropdown-link-active-bg-H:hue($component-active-bg )!default;
+$dropdown-link-active-bg-S:saturation($component-active-bg )!default;
+$dropdown-link-active-bg-L:lightness($component-active-bg )!default;
+$dropdown-link-active-bg-A:alpha($component-active-bg )!default;
+
+
+$dropdown-link-disabled-color:$gray-light ;
+$dropdown-link-disabled-color-R:red($gray-light )!default;
+$dropdown-link-disabled-color-G:green($gray-light )!default;
+$dropdown-link-disabled-color-B:blue($gray-light )!default;
+$dropdown-link-disabled-color-H:hue($gray-light )!default;
+$dropdown-link-disabled-color-S:saturation($gray-light )!default;
+$dropdown-link-disabled-color-L:lightness($gray-light )!default;
+$dropdown-link-disabled-color-A:alpha($gray-light )!default;
+
+
+$dropdown-item-padding-x:1.5rem ;
+
+
+$dropdown-header-color:$gray-light ;
+$dropdown-header-color-R:red($gray-light )!default;
+$dropdown-header-color-G:green($gray-light )!default;
+$dropdown-header-color-B:blue($gray-light )!default;
+$dropdown-header-color-H:hue($gray-light )!default;
+$dropdown-header-color-S:saturation($gray-light )!default;
+$dropdown-header-color-L:lightness($gray-light )!default;
+$dropdown-header-color-A:alpha($gray-light )!default;
+
+
+
+// Z-index master list
+//
+// Warning: Avoid customizing these values. They're used for a bird's eye view
+// of components dependent on the z-axis and are designed to all work together.
+
+$zindex-dropdown-backdrop:990 ;
+
+$zindex-navbar:1000 ;
+
+$zindex-dropdown:1000 ;
+
+$zindex-fixed:1030 ;
+
+$zindex-sticky:1030 ;
+
+$zindex-modal-backdrop:1040 ;
+
+$zindex-modal:1050 ;
+
+$zindex-popover:1060 ;
+
+$zindex-tooltip:1070 ;
+
+
+
+// Navbar
+
+$navbar-border-radius:$border-radius ;
+$navbar-border-radius-R:red($border-radius )!default;
+$navbar-border-radius-G:green($border-radius )!default;
+$navbar-border-radius-B:blue($border-radius )!default;
+$navbar-border-radius-H:hue($border-radius )!default;
+$navbar-border-radius-S:saturation($border-radius )!default;
+$navbar-border-radius-L:lightness($border-radius )!default;
+$navbar-border-radius-A:alpha($border-radius )!default;
+
+$navbar-padding-x:$spacer ;
+$navbar-padding-x-R:red($spacer )!default;
+$navbar-padding-x-G:green($spacer )!default;
+$navbar-padding-x-B:blue($spacer )!default;
+$navbar-padding-x-H:hue($spacer )!default;
+$navbar-padding-x-S:saturation($spacer )!default;
+$navbar-padding-x-L:lightness($spacer )!default;
+$navbar-padding-x-A:alpha($spacer )!default;
+
+$navbar-padding-y:($spacer / 2) ;
+$navbar-padding-y-R:red(($spacer / 2) )!default;
+$navbar-padding-y-G:green(($spacer / 2) )!default;
+$navbar-padding-y-B:blue(($spacer / 2) )!default;
+$navbar-padding-y-H:hue(($spacer / 2) )!default;
+$navbar-padding-y-S:saturation(($spacer / 2) )!default;
+$navbar-padding-y-L:lightness(($spacer / 2) )!default;
+$navbar-padding-y-A:alpha(($spacer / 2) )!default;
+
+
+$navbar-brand-padding-y:.25rem ;
+
+
+$navbar-toggler-padding-x:.75rem ;
+
+$navbar-toggler-padding-y:.25rem ;
+
+$navbar-toggler-font-size:$font-size-lg ;
+$navbar-toggler-font-size-R:red($font-size-lg )!default;
+$navbar-toggler-font-size-G:green($font-size-lg )!default;
+$navbar-toggler-font-size-B:blue($font-size-lg )!default;
+$navbar-toggler-font-size-H:hue($font-size-lg )!default;
+$navbar-toggler-font-size-S:saturation($font-size-lg )!default;
+$navbar-toggler-font-size-L:lightness($font-size-lg )!default;
+$navbar-toggler-font-size-A:alpha($font-size-lg )!default;
+
+$navbar-toggler-border-radius:$btn-border-radius ;
+$navbar-toggler-border-radius-R:red($btn-border-radius )!default;
+$navbar-toggler-border-radius-G:green($btn-border-radius )!default;
+$navbar-toggler-border-radius-B:blue($btn-border-radius )!default;
+$navbar-toggler-border-radius-H:hue($btn-border-radius )!default;
+$navbar-toggler-border-radius-S:saturation($btn-border-radius )!default;
+$navbar-toggler-border-radius-L:lightness($btn-border-radius )!default;
+$navbar-toggler-border-radius-A:alpha($btn-border-radius )!default;
+
+
+$navbar-inverse-color:rgba($white,.5) ;
+$navbar-inverse-color-R:red(rgba($white,.5) )!default;
+$navbar-inverse-color-G:green(rgba($white,.5) )!default;
+$navbar-inverse-color-B:blue(rgba($white,.5) )!default;
+$navbar-inverse-color-H:hue(rgba($white,.5) )!default;
+$navbar-inverse-color-S:saturation(rgba($white,.5) )!default;
+$navbar-inverse-color-L:lightness(rgba($white,.5) )!default;
+$navbar-inverse-color-A:alpha(rgba($white,.5) )!default;
+
+$navbar-inverse-hover-color:rgba($white,.75) ;
+$navbar-inverse-hover-color-R:red(rgba($white,.75) )!default;
+$navbar-inverse-hover-color-G:green(rgba($white,.75) )!default;
+$navbar-inverse-hover-color-B:blue(rgba($white,.75) )!default;
+$navbar-inverse-hover-color-H:hue(rgba($white,.75) )!default;
+$navbar-inverse-hover-color-S:saturation(rgba($white,.75) )!default;
+$navbar-inverse-hover-color-L:lightness(rgba($white,.75) )!default;
+$navbar-inverse-hover-color-A:alpha(rgba($white,.75) )!default;
+
+$navbar-inverse-active-color:rgba($white,1) ;
+$navbar-inverse-active-color-R:red(rgba($white,1) )!default;
+$navbar-inverse-active-color-G:green(rgba($white,1) )!default;
+$navbar-inverse-active-color-B:blue(rgba($white,1) )!default;
+$navbar-inverse-active-color-H:hue(rgba($white,1) )!default;
+$navbar-inverse-active-color-S:saturation(rgba($white,1) )!default;
+$navbar-inverse-active-color-L:lightness(rgba($white,1) )!default;
+$navbar-inverse-active-color-A:alpha(rgba($white,1) )!default;
+
+$navbar-inverse-disabled-color:rgba($white,.25) ;
+$navbar-inverse-disabled-color-R:red(rgba($white,.25) )!default;
+$navbar-inverse-disabled-color-G:green(rgba($white,.25) )!default;
+$navbar-inverse-disabled-color-B:blue(rgba($white,.25) )!default;
+$navbar-inverse-disabled-color-H:hue(rgba($white,.25) )!default;
+$navbar-inverse-disabled-color-S:saturation(rgba($white,.25) )!default;
+$navbar-inverse-disabled-color-L:lightness(rgba($white,.25) )!default;
+$navbar-inverse-disabled-color-A:alpha(rgba($white,.25) )!default;
+
+$navbar-inverse-toggler-bg:str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#{$navbar-inverse-color' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E"), "#", "%23") ;
+$navbar-inverse-toggler-bg-R:red(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#{$navbar-inverse-color' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$navbar-inverse-toggler-bg-G:green(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#{$navbar-inverse-color' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$navbar-inverse-toggler-bg-B:blue(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#{$navbar-inverse-color' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$navbar-inverse-toggler-bg-H:hue(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#{$navbar-inverse-color' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$navbar-inverse-toggler-bg-S:saturation(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#{$navbar-inverse-color' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$navbar-inverse-toggler-bg-L:lightness(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#{$navbar-inverse-color' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$navbar-inverse-toggler-bg-A:alpha(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#{$navbar-inverse-color' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E"), "#", "%23") )!default;
+
+$navbar-inverse-toggler-border:rgba($white,.1) ;
+$navbar-inverse-toggler-border-R:red(rgba($white,.1) )!default;
+$navbar-inverse-toggler-border-G:green(rgba($white,.1) )!default;
+$navbar-inverse-toggler-border-B:blue(rgba($white,.1) )!default;
+$navbar-inverse-toggler-border-H:hue(rgba($white,.1) )!default;
+$navbar-inverse-toggler-border-S:saturation(rgba($white,.1) )!default;
+$navbar-inverse-toggler-border-L:lightness(rgba($white,.1) )!default;
+$navbar-inverse-toggler-border-A:alpha(rgba($white,.1) )!default;
+
+
+$navbar-light-color:rgba($black,.5) ;
+$navbar-light-color-R:red(rgba($black,.5) )!default;
+$navbar-light-color-G:green(rgba($black,.5) )!default;
+$navbar-light-color-B:blue(rgba($black,.5) )!default;
+$navbar-light-color-H:hue(rgba($black,.5) )!default;
+$navbar-light-color-S:saturation(rgba($black,.5) )!default;
+$navbar-light-color-L:lightness(rgba($black,.5) )!default;
+$navbar-light-color-A:alpha(rgba($black,.5) )!default;
+
+$navbar-light-hover-color:rgba($black,.7) ;
+$navbar-light-hover-color-R:red(rgba($black,.7) )!default;
+$navbar-light-hover-color-G:green(rgba($black,.7) )!default;
+$navbar-light-hover-color-B:blue(rgba($black,.7) )!default;
+$navbar-light-hover-color-H:hue(rgba($black,.7) )!default;
+$navbar-light-hover-color-S:saturation(rgba($black,.7) )!default;
+$navbar-light-hover-color-L:lightness(rgba($black,.7) )!default;
+$navbar-light-hover-color-A:alpha(rgba($black,.7) )!default;
+
+$navbar-light-active-color:rgba($black,.9) ;
+$navbar-light-active-color-R:red(rgba($black,.9) )!default;
+$navbar-light-active-color-G:green(rgba($black,.9) )!default;
+$navbar-light-active-color-B:blue(rgba($black,.9) )!default;
+$navbar-light-active-color-H:hue(rgba($black,.9) )!default;
+$navbar-light-active-color-S:saturation(rgba($black,.9) )!default;
+$navbar-light-active-color-L:lightness(rgba($black,.9) )!default;
+$navbar-light-active-color-A:alpha(rgba($black,.9) )!default;
+
+$navbar-light-disabled-color:rgba($black,.3) ;
+$navbar-light-disabled-color-R:red(rgba($black,.3) )!default;
+$navbar-light-disabled-color-G:green(rgba($black,.3) )!default;
+$navbar-light-disabled-color-B:blue(rgba($black,.3) )!default;
+$navbar-light-disabled-color-H:hue(rgba($black,.3) )!default;
+$navbar-light-disabled-color-S:saturation(rgba($black,.3) )!default;
+$navbar-light-disabled-color-L:lightness(rgba($black,.3) )!default;
+$navbar-light-disabled-color-A:alpha(rgba($black,.3) )!default;
+
+$navbar-light-toggler-bg:str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#{$navbar-light-color' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E"), "#", "%23") ;
+$navbar-light-toggler-bg-R:red(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#{$navbar-light-color' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$navbar-light-toggler-bg-G:green(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#{$navbar-light-color' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$navbar-light-toggler-bg-B:blue(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#{$navbar-light-color' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$navbar-light-toggler-bg-H:hue(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#{$navbar-light-color' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$navbar-light-toggler-bg-S:saturation(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#{$navbar-light-color' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$navbar-light-toggler-bg-L:lightness(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#{$navbar-light-color' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$navbar-light-toggler-bg-A:alpha(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#{$navbar-light-color' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E"), "#", "%23") )!default;
+
+$navbar-light-toggler-border:rgba($black,.1) ;
+$navbar-light-toggler-border-R:red(rgba($black,.1) )!default;
+$navbar-light-toggler-border-G:green(rgba($black,.1) )!default;
+$navbar-light-toggler-border-B:blue(rgba($black,.1) )!default;
+$navbar-light-toggler-border-H:hue(rgba($black,.1) )!default;
+$navbar-light-toggler-border-S:saturation(rgba($black,.1) )!default;
+$navbar-light-toggler-border-L:lightness(rgba($black,.1) )!default;
+$navbar-light-toggler-border-A:alpha(rgba($black,.1) )!default;
+
+
+// Navs
+
+$nav-item-margin:.2rem ;
+
+$nav-item-inline-spacer:1rem ;
+
+$nav-link-padding:.5em 1em ;
+
+$nav-link-hover-bg:$gray-lighter ;
+$nav-link-hover-bg-R:red($gray-lighter )!default;
+$nav-link-hover-bg-G:green($gray-lighter )!default;
+$nav-link-hover-bg-B:blue($gray-lighter )!default;
+$nav-link-hover-bg-H:hue($gray-lighter )!default;
+$nav-link-hover-bg-S:saturation($gray-lighter )!default;
+$nav-link-hover-bg-L:lightness($gray-lighter )!default;
+$nav-link-hover-bg-A:alpha($gray-lighter )!default;
+
+$nav-disabled-link-color:$gray-light ;
+$nav-disabled-link-color-R:red($gray-light )!default;
+$nav-disabled-link-color-G:green($gray-light )!default;
+$nav-disabled-link-color-B:blue($gray-light )!default;
+$nav-disabled-link-color-H:hue($gray-light )!default;
+$nav-disabled-link-color-S:saturation($gray-light )!default;
+$nav-disabled-link-color-L:lightness($gray-light )!default;
+$nav-disabled-link-color-A:alpha($gray-light )!default;
+
+
+$nav-tabs-border-color:#ddd ;
+$nav-tabs-border-color-R:red(#ddd )!default;
+$nav-tabs-border-color-G:green(#ddd )!default;
+$nav-tabs-border-color-B:blue(#ddd )!default;
+$nav-tabs-border-color-H:hue(#ddd )!default;
+$nav-tabs-border-color-S:saturation(#ddd )!default;
+$nav-tabs-border-color-L:lightness(#ddd )!default;
+$nav-tabs-border-color-A:alpha(#ddd )!default;
+
+$nav-tabs-border-width:$border-width ;
+$nav-tabs-border-width-R:red($border-width )!default;
+$nav-tabs-border-width-G:green($border-width )!default;
+$nav-tabs-border-width-B:blue($border-width )!default;
+$nav-tabs-border-width-H:hue($border-width )!default;
+$nav-tabs-border-width-S:saturation($border-width )!default;
+$nav-tabs-border-width-L:lightness($border-width )!default;
+$nav-tabs-border-width-A:alpha($border-width )!default;
+
+$nav-tabs-border-radius:$border-radius ;
+$nav-tabs-border-radius-R:red($border-radius )!default;
+$nav-tabs-border-radius-G:green($border-radius )!default;
+$nav-tabs-border-radius-B:blue($border-radius )!default;
+$nav-tabs-border-radius-H:hue($border-radius )!default;
+$nav-tabs-border-radius-S:saturation($border-radius )!default;
+$nav-tabs-border-radius-L:lightness($border-radius )!default;
+$nav-tabs-border-radius-A:alpha($border-radius )!default;
+
+$nav-tabs-link-hover-border-color:$gray-lighter ;
+$nav-tabs-link-hover-border-color-R:red($gray-lighter )!default;
+$nav-tabs-link-hover-border-color-G:green($gray-lighter )!default;
+$nav-tabs-link-hover-border-color-B:blue($gray-lighter )!default;
+$nav-tabs-link-hover-border-color-H:hue($gray-lighter )!default;
+$nav-tabs-link-hover-border-color-S:saturation($gray-lighter )!default;
+$nav-tabs-link-hover-border-color-L:lightness($gray-lighter )!default;
+$nav-tabs-link-hover-border-color-A:alpha($gray-lighter )!default;
+
+$nav-tabs-active-link-hover-color:$gray ;
+$nav-tabs-active-link-hover-color-R:red($gray )!default;
+$nav-tabs-active-link-hover-color-G:green($gray )!default;
+$nav-tabs-active-link-hover-color-B:blue($gray )!default;
+$nav-tabs-active-link-hover-color-H:hue($gray )!default;
+$nav-tabs-active-link-hover-color-S:saturation($gray )!default;
+$nav-tabs-active-link-hover-color-L:lightness($gray )!default;
+$nav-tabs-active-link-hover-color-A:alpha($gray )!default;
+
+$nav-tabs-active-link-hover-bg:$body-bg ;
+$nav-tabs-active-link-hover-bg-R:red($body-bg )!default;
+$nav-tabs-active-link-hover-bg-G:green($body-bg )!default;
+$nav-tabs-active-link-hover-bg-B:blue($body-bg )!default;
+$nav-tabs-active-link-hover-bg-H:hue($body-bg )!default;
+$nav-tabs-active-link-hover-bg-S:saturation($body-bg )!default;
+$nav-tabs-active-link-hover-bg-L:lightness($body-bg )!default;
+$nav-tabs-active-link-hover-bg-A:alpha($body-bg )!default;
+
+$nav-tabs-active-link-hover-border-color:#ddd ;
+$nav-tabs-active-link-hover-border-color-R:red(#ddd )!default;
+$nav-tabs-active-link-hover-border-color-G:green(#ddd )!default;
+$nav-tabs-active-link-hover-border-color-B:blue(#ddd )!default;
+$nav-tabs-active-link-hover-border-color-H:hue(#ddd )!default;
+$nav-tabs-active-link-hover-border-color-S:saturation(#ddd )!default;
+$nav-tabs-active-link-hover-border-color-L:lightness(#ddd )!default;
+$nav-tabs-active-link-hover-border-color-A:alpha(#ddd )!default;
+
+$nav-tabs-justified-link-border-color:#ddd ;
+$nav-tabs-justified-link-border-color-R:red(#ddd )!default;
+$nav-tabs-justified-link-border-color-G:green(#ddd )!default;
+$nav-tabs-justified-link-border-color-B:blue(#ddd )!default;
+$nav-tabs-justified-link-border-color-H:hue(#ddd )!default;
+$nav-tabs-justified-link-border-color-S:saturation(#ddd )!default;
+$nav-tabs-justified-link-border-color-L:lightness(#ddd )!default;
+$nav-tabs-justified-link-border-color-A:alpha(#ddd )!default;
+
+$nav-tabs-justified-active-link-border-color:$body-bg ;
+$nav-tabs-justified-active-link-border-color-R:red($body-bg )!default;
+$nav-tabs-justified-active-link-border-color-G:green($body-bg )!default;
+$nav-tabs-justified-active-link-border-color-B:blue($body-bg )!default;
+$nav-tabs-justified-active-link-border-color-H:hue($body-bg )!default;
+$nav-tabs-justified-active-link-border-color-S:saturation($body-bg )!default;
+$nav-tabs-justified-active-link-border-color-L:lightness($body-bg )!default;
+$nav-tabs-justified-active-link-border-color-A:alpha($body-bg )!default;
+
+
+$nav-pills-border-radius:$border-radius ;
+$nav-pills-border-radius-R:red($border-radius )!default;
+$nav-pills-border-radius-G:green($border-radius )!default;
+$nav-pills-border-radius-B:blue($border-radius )!default;
+$nav-pills-border-radius-H:hue($border-radius )!default;
+$nav-pills-border-radius-S:saturation($border-radius )!default;
+$nav-pills-border-radius-L:lightness($border-radius )!default;
+$nav-pills-border-radius-A:alpha($border-radius )!default;
+
+$nav-pills-active-link-color:$component-active-color ;
+$nav-pills-active-link-color-R:red($component-active-color )!default;
+$nav-pills-active-link-color-G:green($component-active-color )!default;
+$nav-pills-active-link-color-B:blue($component-active-color )!default;
+$nav-pills-active-link-color-H:hue($component-active-color )!default;
+$nav-pills-active-link-color-S:saturation($component-active-color )!default;
+$nav-pills-active-link-color-L:lightness($component-active-color )!default;
+$nav-pills-active-link-color-A:alpha($component-active-color )!default;
+
+$nav-pills-active-link-bg:$component-active-bg ;
+$nav-pills-active-link-bg-R:red($component-active-bg )!default;
+$nav-pills-active-link-bg-G:green($component-active-bg )!default;
+$nav-pills-active-link-bg-B:blue($component-active-bg )!default;
+$nav-pills-active-link-bg-H:hue($component-active-bg )!default;
+$nav-pills-active-link-bg-S:saturation($component-active-bg )!default;
+$nav-pills-active-link-bg-L:lightness($component-active-bg )!default;
+$nav-pills-active-link-bg-A:alpha($component-active-bg )!default;
+
+
+
+// Pagination
+
+$pagination-padding-x:.75rem ;
+
+$pagination-padding-y:.5rem ;
+
+$pagination-padding-x-sm:.5rem ;
+
+$pagination-padding-y-sm:.25rem ;
+
+$pagination-padding-x-lg:1.5rem ;
+
+$pagination-padding-y-lg:.75rem ;
+
+$pagination-line-height:1.25 ;
+
+
+$pagination-color:$link-color ;
+$pagination-color-R:red($link-color )!default;
+$pagination-color-G:green($link-color )!default;
+$pagination-color-B:blue($link-color )!default;
+$pagination-color-H:hue($link-color )!default;
+$pagination-color-S:saturation($link-color )!default;
+$pagination-color-L:lightness($link-color )!default;
+$pagination-color-A:alpha($link-color )!default;
+
+$pagination-bg:$white ;
+$pagination-bg-R:red($white )!default;
+$pagination-bg-G:green($white )!default;
+$pagination-bg-B:blue($white )!default;
+$pagination-bg-H:hue($white )!default;
+$pagination-bg-S:saturation($white )!default;
+$pagination-bg-L:lightness($white )!default;
+$pagination-bg-A:alpha($white )!default;
+
+$pagination-border-width:$border-width ;
+$pagination-border-width-R:red($border-width )!default;
+$pagination-border-width-G:green($border-width )!default;
+$pagination-border-width-B:blue($border-width )!default;
+$pagination-border-width-H:hue($border-width )!default;
+$pagination-border-width-S:saturation($border-width )!default;
+$pagination-border-width-L:lightness($border-width )!default;
+$pagination-border-width-A:alpha($border-width )!default;
+
+$pagination-border-color:#ddd ;
+$pagination-border-color-R:red(#ddd )!default;
+$pagination-border-color-G:green(#ddd )!default;
+$pagination-border-color-B:blue(#ddd )!default;
+$pagination-border-color-H:hue(#ddd )!default;
+$pagination-border-color-S:saturation(#ddd )!default;
+$pagination-border-color-L:lightness(#ddd )!default;
+$pagination-border-color-A:alpha(#ddd )!default;
+
+
+$pagination-hover-color:$link-hover-color ;
+$pagination-hover-color-R:red($link-hover-color )!default;
+$pagination-hover-color-G:green($link-hover-color )!default;
+$pagination-hover-color-B:blue($link-hover-color )!default;
+$pagination-hover-color-H:hue($link-hover-color )!default;
+$pagination-hover-color-S:saturation($link-hover-color )!default;
+$pagination-hover-color-L:lightness($link-hover-color )!default;
+$pagination-hover-color-A:alpha($link-hover-color )!default;
+
+$pagination-hover-bg:$gray-lighter ;
+$pagination-hover-bg-R:red($gray-lighter )!default;
+$pagination-hover-bg-G:green($gray-lighter )!default;
+$pagination-hover-bg-B:blue($gray-lighter )!default;
+$pagination-hover-bg-H:hue($gray-lighter )!default;
+$pagination-hover-bg-S:saturation($gray-lighter )!default;
+$pagination-hover-bg-L:lightness($gray-lighter )!default;
+$pagination-hover-bg-A:alpha($gray-lighter )!default;
+
+$pagination-hover-border:#ddd ;
+$pagination-hover-border-R:red(#ddd )!default;
+$pagination-hover-border-G:green(#ddd )!default;
+$pagination-hover-border-B:blue(#ddd )!default;
+$pagination-hover-border-H:hue(#ddd )!default;
+$pagination-hover-border-S:saturation(#ddd )!default;
+$pagination-hover-border-L:lightness(#ddd )!default;
+$pagination-hover-border-A:alpha(#ddd )!default;
+
+
+$pagination-active-color:$white ;
+$pagination-active-color-R:red($white )!default;
+$pagination-active-color-G:green($white )!default;
+$pagination-active-color-B:blue($white )!default;
+$pagination-active-color-H:hue($white )!default;
+$pagination-active-color-S:saturation($white )!default;
+$pagination-active-color-L:lightness($white )!default;
+$pagination-active-color-A:alpha($white )!default;
+
+$pagination-active-bg:$brand-primary ;
+$pagination-active-bg-R:red($brand-primary )!default;
+$pagination-active-bg-G:green($brand-primary )!default;
+$pagination-active-bg-B:blue($brand-primary )!default;
+$pagination-active-bg-H:hue($brand-primary )!default;
+$pagination-active-bg-S:saturation($brand-primary )!default;
+$pagination-active-bg-L:lightness($brand-primary )!default;
+$pagination-active-bg-A:alpha($brand-primary )!default;
+
+$pagination-active-border:$brand-primary ;
+$pagination-active-border-R:red($brand-primary )!default;
+$pagination-active-border-G:green($brand-primary )!default;
+$pagination-active-border-B:blue($brand-primary )!default;
+$pagination-active-border-H:hue($brand-primary )!default;
+$pagination-active-border-S:saturation($brand-primary )!default;
+$pagination-active-border-L:lightness($brand-primary )!default;
+$pagination-active-border-A:alpha($brand-primary )!default;
+
+
+$pagination-disabled-color:$gray-light ;
+$pagination-disabled-color-R:red($gray-light )!default;
+$pagination-disabled-color-G:green($gray-light )!default;
+$pagination-disabled-color-B:blue($gray-light )!default;
+$pagination-disabled-color-H:hue($gray-light )!default;
+$pagination-disabled-color-S:saturation($gray-light )!default;
+$pagination-disabled-color-L:lightness($gray-light )!default;
+$pagination-disabled-color-A:alpha($gray-light )!default;
+
+$pagination-disabled-bg:$white ;
+$pagination-disabled-bg-R:red($white )!default;
+$pagination-disabled-bg-G:green($white )!default;
+$pagination-disabled-bg-B:blue($white )!default;
+$pagination-disabled-bg-H:hue($white )!default;
+$pagination-disabled-bg-S:saturation($white )!default;
+$pagination-disabled-bg-L:lightness($white )!default;
+$pagination-disabled-bg-A:alpha($white )!default;
+
+$pagination-disabled-border:#ddd ;
+$pagination-disabled-border-R:red(#ddd )!default;
+$pagination-disabled-border-G:green(#ddd )!default;
+$pagination-disabled-border-B:blue(#ddd )!default;
+$pagination-disabled-border-H:hue(#ddd )!default;
+$pagination-disabled-border-S:saturation(#ddd )!default;
+$pagination-disabled-border-L:lightness(#ddd )!default;
+$pagination-disabled-border-A:alpha(#ddd )!default;
+
+
+
+// Jumbotron
+
+$jumbotron-padding:2rem ;
+
+$jumbotron-bg:$gray-lighter ;
+$jumbotron-bg-R:red($gray-lighter )!default;
+$jumbotron-bg-G:green($gray-lighter )!default;
+$jumbotron-bg-B:blue($gray-lighter )!default;
+$jumbotron-bg-H:hue($gray-lighter )!default;
+$jumbotron-bg-S:saturation($gray-lighter )!default;
+$jumbotron-bg-L:lightness($gray-lighter )!default;
+$jumbotron-bg-A:alpha($gray-lighter )!default;
+
+
+
+// Form states and alerts
+//
+// Define colors for form feedback states and, by default, alerts.
+
+$state-success-text:#3c763d ;
+$state-success-text-R:red(#3c763d )!default;
+$state-success-text-G:green(#3c763d )!default;
+$state-success-text-B:blue(#3c763d )!default;
+$state-success-text-H:hue(#3c763d )!default;
+$state-success-text-S:saturation(#3c763d )!default;
+$state-success-text-L:lightness(#3c763d )!default;
+$state-success-text-A:alpha(#3c763d )!default;
+
+$state-success-bg:#dff0d8 ;
+$state-success-bg-R:red(#dff0d8 )!default;
+$state-success-bg-G:green(#dff0d8 )!default;
+$state-success-bg-B:blue(#dff0d8 )!default;
+$state-success-bg-H:hue(#dff0d8 )!default;
+$state-success-bg-S:saturation(#dff0d8 )!default;
+$state-success-bg-L:lightness(#dff0d8 )!default;
+$state-success-bg-A:alpha(#dff0d8 )!default;
+
+$state-success-border:darken($state-success-bg, 5%) ;
+$state-success-border-R:red(darken($state-success-bg, 5%) )!default;
+$state-success-border-G:green(darken($state-success-bg, 5%) )!default;
+$state-success-border-B:blue(darken($state-success-bg, 5%) )!default;
+$state-success-border-H:hue(darken($state-success-bg, 5%) )!default;
+$state-success-border-S:saturation(darken($state-success-bg, 5%) )!default;
+$state-success-border-L:lightness(darken($state-success-bg, 5%) )!default;
+$state-success-border-A:alpha(darken($state-success-bg, 5%) )!default;
+
+
+$state-info-text:#31708f ;
+$state-info-text-R:red(#31708f )!default;
+$state-info-text-G:green(#31708f )!default;
+$state-info-text-B:blue(#31708f )!default;
+$state-info-text-H:hue(#31708f )!default;
+$state-info-text-S:saturation(#31708f )!default;
+$state-info-text-L:lightness(#31708f )!default;
+$state-info-text-A:alpha(#31708f )!default;
+
+$state-info-bg:#d9edf7 ;
+$state-info-bg-R:red(#d9edf7 )!default;
+$state-info-bg-G:green(#d9edf7 )!default;
+$state-info-bg-B:blue(#d9edf7 )!default;
+$state-info-bg-H:hue(#d9edf7 )!default;
+$state-info-bg-S:saturation(#d9edf7 )!default;
+$state-info-bg-L:lightness(#d9edf7 )!default;
+$state-info-bg-A:alpha(#d9edf7 )!default;
+
+$state-info-border:darken($state-info-bg, 7%) ;
+$state-info-border-R:red(darken($state-info-bg, 7%) )!default;
+$state-info-border-G:green(darken($state-info-bg, 7%) )!default;
+$state-info-border-B:blue(darken($state-info-bg, 7%) )!default;
+$state-info-border-H:hue(darken($state-info-bg, 7%) )!default;
+$state-info-border-S:saturation(darken($state-info-bg, 7%) )!default;
+$state-info-border-L:lightness(darken($state-info-bg, 7%) )!default;
+$state-info-border-A:alpha(darken($state-info-bg, 7%) )!default;
+
+
+$state-warning-text:#8a6d3b ;
+$state-warning-text-R:red(#8a6d3b )!default;
+$state-warning-text-G:green(#8a6d3b )!default;
+$state-warning-text-B:blue(#8a6d3b )!default;
+$state-warning-text-H:hue(#8a6d3b )!default;
+$state-warning-text-S:saturation(#8a6d3b )!default;
+$state-warning-text-L:lightness(#8a6d3b )!default;
+$state-warning-text-A:alpha(#8a6d3b )!default;
+
+$state-warning-bg:#fcf8e3 ;
+$state-warning-bg-R:red(#fcf8e3 )!default;
+$state-warning-bg-G:green(#fcf8e3 )!default;
+$state-warning-bg-B:blue(#fcf8e3 )!default;
+$state-warning-bg-H:hue(#fcf8e3 )!default;
+$state-warning-bg-S:saturation(#fcf8e3 )!default;
+$state-warning-bg-L:lightness(#fcf8e3 )!default;
+$state-warning-bg-A:alpha(#fcf8e3 )!default;
+
+$mark-bg:$state-warning-bg ;
+$mark-bg-R:red($state-warning-bg )!default;
+$mark-bg-G:green($state-warning-bg )!default;
+$mark-bg-B:blue($state-warning-bg )!default;
+$mark-bg-H:hue($state-warning-bg )!default;
+$mark-bg-S:saturation($state-warning-bg )!default;
+$mark-bg-L:lightness($state-warning-bg )!default;
+$mark-bg-A:alpha($state-warning-bg )!default;
+
+$state-warning-border:darken($state-warning-bg, 5%) ;
+$state-warning-border-R:red(darken($state-warning-bg, 5%) )!default;
+$state-warning-border-G:green(darken($state-warning-bg, 5%) )!default;
+$state-warning-border-B:blue(darken($state-warning-bg, 5%) )!default;
+$state-warning-border-H:hue(darken($state-warning-bg, 5%) )!default;
+$state-warning-border-S:saturation(darken($state-warning-bg, 5%) )!default;
+$state-warning-border-L:lightness(darken($state-warning-bg, 5%) )!default;
+$state-warning-border-A:alpha(darken($state-warning-bg, 5%) )!default;
+
+
+$state-danger-text:#a94442 ;
+$state-danger-text-R:red(#a94442 )!default;
+$state-danger-text-G:green(#a94442 )!default;
+$state-danger-text-B:blue(#a94442 )!default;
+$state-danger-text-H:hue(#a94442 )!default;
+$state-danger-text-S:saturation(#a94442 )!default;
+$state-danger-text-L:lightness(#a94442 )!default;
+$state-danger-text-A:alpha(#a94442 )!default;
+
+$state-danger-bg:#f2dede ;
+$state-danger-bg-R:red(#f2dede )!default;
+$state-danger-bg-G:green(#f2dede )!default;
+$state-danger-bg-B:blue(#f2dede )!default;
+$state-danger-bg-H:hue(#f2dede )!default;
+$state-danger-bg-S:saturation(#f2dede )!default;
+$state-danger-bg-L:lightness(#f2dede )!default;
+$state-danger-bg-A:alpha(#f2dede )!default;
+
+$state-danger-border:darken($state-danger-bg, 5%) ;
+$state-danger-border-R:red(darken($state-danger-bg, 5%) )!default;
+$state-danger-border-G:green(darken($state-danger-bg, 5%) )!default;
+$state-danger-border-B:blue(darken($state-danger-bg, 5%) )!default;
+$state-danger-border-H:hue(darken($state-danger-bg, 5%) )!default;
+$state-danger-border-S:saturation(darken($state-danger-bg, 5%) )!default;
+$state-danger-border-L:lightness(darken($state-danger-bg, 5%) )!default;
+$state-danger-border-A:alpha(darken($state-danger-bg, 5%) )!default;
+
+
+
+// Cards
+
+$card-spacer-x:1.25rem ;
+
+$card-spacer-y:.75rem ;
+
+$card-border-width:1px ;
+
+$card-border-radius:$border-radius ;
+$card-border-radius-R:red($border-radius )!default;
+$card-border-radius-G:green($border-radius )!default;
+$card-border-radius-B:blue($border-radius )!default;
+$card-border-radius-H:hue($border-radius )!default;
+$card-border-radius-S:saturation($border-radius )!default;
+$card-border-radius-L:lightness($border-radius )!default;
+$card-border-radius-A:alpha($border-radius )!default;
+
+$card-border-color:rgba($black,.125) ;
+$card-border-color-R:red(rgba($black,.125) )!default;
+$card-border-color-G:green(rgba($black,.125) )!default;
+$card-border-color-B:blue(rgba($black,.125) )!default;
+$card-border-color-H:hue(rgba($black,.125) )!default;
+$card-border-color-S:saturation(rgba($black,.125) )!default;
+$card-border-color-L:lightness(rgba($black,.125) )!default;
+$card-border-color-A:alpha(rgba($black,.125) )!default;
+
+$card-border-radius-inner:calc(#{$card-border-radius - #{$card-border-width) ;
+$card-border-radius-inner-R:red(calc(#{$card-border-radius - #{$card-border-width) )!default;
+$card-border-radius-inner-G:green(calc(#{$card-border-radius - #{$card-border-width) )!default;
+$card-border-radius-inner-B:blue(calc(#{$card-border-radius - #{$card-border-width) )!default;
+$card-border-radius-inner-H:hue(calc(#{$card-border-radius - #{$card-border-width) )!default;
+$card-border-radius-inner-S:saturation(calc(#{$card-border-radius - #{$card-border-width) )!default;
+$card-border-radius-inner-L:lightness(calc(#{$card-border-radius - #{$card-border-width) )!default;
+$card-border-radius-inner-A:alpha(calc(#{$card-border-radius - #{$card-border-width) )!default;
+
+$card-cap-bg:$gray-lightest ;
+$card-cap-bg-R:red($gray-lightest )!default;
+$card-cap-bg-G:green($gray-lightest )!default;
+$card-cap-bg-B:blue($gray-lightest )!default;
+$card-cap-bg-H:hue($gray-lightest )!default;
+$card-cap-bg-S:saturation($gray-lightest )!default;
+$card-cap-bg-L:lightness($gray-lightest )!default;
+$card-cap-bg-A:alpha($gray-lightest )!default;
+
+$card-bg:$white ;
+$card-bg-R:red($white )!default;
+$card-bg-G:green($white )!default;
+$card-bg-B:blue($white )!default;
+$card-bg-H:hue($white )!default;
+$card-bg-S:saturation($white )!default;
+$card-bg-L:lightness($white )!default;
+$card-bg-A:alpha($white )!default;
+
+
+$card-link-hover-color:$white ;
+$card-link-hover-color-R:red($white )!default;
+$card-link-hover-color-G:green($white )!default;
+$card-link-hover-color-B:blue($white )!default;
+$card-link-hover-color-H:hue($white )!default;
+$card-link-hover-color-S:saturation($white )!default;
+$card-link-hover-color-L:lightness($white )!default;
+$card-link-hover-color-A:alpha($white )!default;
+
+
+$card-img-overlay-padding:1.25rem ;
+
+
+$card-deck-margin:($grid-gutter-width-base / 2) ;
+$card-deck-margin-R:red(($grid-gutter-width-base / 2) )!default;
+$card-deck-margin-G:green(($grid-gutter-width-base / 2) )!default;
+$card-deck-margin-B:blue(($grid-gutter-width-base / 2) )!default;
+$card-deck-margin-H:hue(($grid-gutter-width-base / 2) )!default;
+$card-deck-margin-S:saturation(($grid-gutter-width-base / 2) )!default;
+$card-deck-margin-L:lightness(($grid-gutter-width-base / 2) )!default;
+$card-deck-margin-A:alpha(($grid-gutter-width-base / 2) )!default;
+
+
+$card-columns-count:3 ;
+
+$card-columns-gap:1.25rem ;
+
+$card-columns-margin:$card-spacer-y ;
+$card-columns-margin-R:red($card-spacer-y )!default;
+$card-columns-margin-G:green($card-spacer-y )!default;
+$card-columns-margin-B:blue($card-spacer-y )!default;
+$card-columns-margin-H:hue($card-spacer-y )!default;
+$card-columns-margin-S:saturation($card-spacer-y )!default;
+$card-columns-margin-L:lightness($card-spacer-y )!default;
+$card-columns-margin-A:alpha($card-spacer-y )!default;
+
+
+
+// Tooltips
+
+$tooltip-max-width:200px ;
+
+$tooltip-color:$white ;
+$tooltip-color-R:red($white )!default;
+$tooltip-color-G:green($white )!default;
+$tooltip-color-B:blue($white )!default;
+$tooltip-color-H:hue($white )!default;
+$tooltip-color-S:saturation($white )!default;
+$tooltip-color-L:lightness($white )!default;
+$tooltip-color-A:alpha($white )!default;
+
+$tooltip-bg:$black ;
+$tooltip-bg-R:red($black )!default;
+$tooltip-bg-G:green($black )!default;
+$tooltip-bg-B:blue($black )!default;
+$tooltip-bg-H:hue($black )!default;
+$tooltip-bg-S:saturation($black )!default;
+$tooltip-bg-L:lightness($black )!default;
+$tooltip-bg-A:alpha($black )!default;
+
+$tooltip-opacity:.9 ;
+
+$tooltip-padding-y:3px ;
+
+$tooltip-padding-x:8px ;
+
+$tooltip-margin:3px ;
+
+
+$tooltip-arrow-width:5px ;
+
+$tooltip-arrow-color:$tooltip-bg ;
+$tooltip-arrow-color-R:red($tooltip-bg )!default;
+$tooltip-arrow-color-G:green($tooltip-bg )!default;
+$tooltip-arrow-color-B:blue($tooltip-bg )!default;
+$tooltip-arrow-color-H:hue($tooltip-bg )!default;
+$tooltip-arrow-color-S:saturation($tooltip-bg )!default;
+$tooltip-arrow-color-L:lightness($tooltip-bg )!default;
+$tooltip-arrow-color-A:alpha($tooltip-bg )!default;
+
+
+
+// Popovers
+
+$popover-inner-padding:1px ;
+
+$popover-bg:$white ;
+$popover-bg-R:red($white )!default;
+$popover-bg-G:green($white )!default;
+$popover-bg-B:blue($white )!default;
+$popover-bg-H:hue($white )!default;
+$popover-bg-S:saturation($white )!default;
+$popover-bg-L:lightness($white )!default;
+$popover-bg-A:alpha($white )!default;
+
+$popover-max-width:276px ;
+
+$popover-border-width:$border-width ;
+$popover-border-width-R:red($border-width )!default;
+$popover-border-width-G:green($border-width )!default;
+$popover-border-width-B:blue($border-width )!default;
+$popover-border-width-H:hue($border-width )!default;
+$popover-border-width-S:saturation($border-width )!default;
+$popover-border-width-L:lightness($border-width )!default;
+$popover-border-width-A:alpha($border-width )!default;
+
+$popover-border-color:rgba($black,.2) ;
+$popover-border-color-R:red(rgba($black,.2) )!default;
+$popover-border-color-G:green(rgba($black,.2) )!default;
+$popover-border-color-B:blue(rgba($black,.2) )!default;
+$popover-border-color-H:hue(rgba($black,.2) )!default;
+$popover-border-color-S:saturation(rgba($black,.2) )!default;
+$popover-border-color-L:lightness(rgba($black,.2) )!default;
+$popover-border-color-A:alpha(rgba($black,.2) )!default;
+
+$popover-box-shadow:0 5px 10px rgba($black,.2) ;
+$popover-box-shadow-R:red(0 5px 10px rgba($black,.2) )!default;
+$popover-box-shadow-G:green(0 5px 10px rgba($black,.2) )!default;
+$popover-box-shadow-B:blue(0 5px 10px rgba($black,.2) )!default;
+$popover-box-shadow-H:hue(0 5px 10px rgba($black,.2) )!default;
+$popover-box-shadow-S:saturation(0 5px 10px rgba($black,.2) )!default;
+$popover-box-shadow-L:lightness(0 5px 10px rgba($black,.2) )!default;
+$popover-box-shadow-A:alpha(0 5px 10px rgba($black,.2) )!default;
+
+
+$popover-title-bg:darken($popover-bg, 3%) ;
+$popover-title-bg-R:red(darken($popover-bg, 3%) )!default;
+$popover-title-bg-G:green(darken($popover-bg, 3%) )!default;
+$popover-title-bg-B:blue(darken($popover-bg, 3%) )!default;
+$popover-title-bg-H:hue(darken($popover-bg, 3%) )!default;
+$popover-title-bg-S:saturation(darken($popover-bg, 3%) )!default;
+$popover-title-bg-L:lightness(darken($popover-bg, 3%) )!default;
+$popover-title-bg-A:alpha(darken($popover-bg, 3%) )!default;
+
+$popover-title-padding-x:14px ;
+
+$popover-title-padding-y:8px ;
+
+
+$popover-content-padding-x:14px ;
+
+$popover-content-padding-y:9px ;
+
+
+$popover-arrow-width:10px ;
+
+$popover-arrow-color:$popover-bg ;
+$popover-arrow-color-R:red($popover-bg )!default;
+$popover-arrow-color-G:green($popover-bg )!default;
+$popover-arrow-color-B:blue($popover-bg )!default;
+$popover-arrow-color-H:hue($popover-bg )!default;
+$popover-arrow-color-S:saturation($popover-bg )!default;
+$popover-arrow-color-L:lightness($popover-bg )!default;
+$popover-arrow-color-A:alpha($popover-bg )!default;
+
+
+$popover-arrow-outer-width:($popover-arrow-width + 1px) ;
+$popover-arrow-outer-width-R:red(($popover-arrow-width + 1px) )!default;
+$popover-arrow-outer-width-G:green(($popover-arrow-width + 1px) )!default;
+$popover-arrow-outer-width-B:blue(($popover-arrow-width + 1px) )!default;
+$popover-arrow-outer-width-H:hue(($popover-arrow-width + 1px) )!default;
+$popover-arrow-outer-width-S:saturation(($popover-arrow-width + 1px) )!default;
+$popover-arrow-outer-width-L:lightness(($popover-arrow-width + 1px) )!default;
+$popover-arrow-outer-width-A:alpha(($popover-arrow-width + 1px) )!default;
+
+$popover-arrow-outer-color:fade-in($popover-border-color, .05) ;
+$popover-arrow-outer-color-R:red(fade-in($popover-border-color, .05) )!default;
+$popover-arrow-outer-color-G:green(fade-in($popover-border-color, .05) )!default;
+$popover-arrow-outer-color-B:blue(fade-in($popover-border-color, .05) )!default;
+$popover-arrow-outer-color-H:hue(fade-in($popover-border-color, .05) )!default;
+$popover-arrow-outer-color-S:saturation(fade-in($popover-border-color, .05) )!default;
+$popover-arrow-outer-color-L:lightness(fade-in($popover-border-color, .05) )!default;
+$popover-arrow-outer-color-A:alpha(fade-in($popover-border-color, .05) )!default;
+
+
+
+// Badges
+
+$badge-default-bg:$gray-light ;
+$badge-default-bg-R:red($gray-light )!default;
+$badge-default-bg-G:green($gray-light )!default;
+$badge-default-bg-B:blue($gray-light )!default;
+$badge-default-bg-H:hue($gray-light )!default;
+$badge-default-bg-S:saturation($gray-light )!default;
+$badge-default-bg-L:lightness($gray-light )!default;
+$badge-default-bg-A:alpha($gray-light )!default;
+
+$badge-primary-bg:$brand-primary ;
+$badge-primary-bg-R:red($brand-primary )!default;
+$badge-primary-bg-G:green($brand-primary )!default;
+$badge-primary-bg-B:blue($brand-primary )!default;
+$badge-primary-bg-H:hue($brand-primary )!default;
+$badge-primary-bg-S:saturation($brand-primary )!default;
+$badge-primary-bg-L:lightness($brand-primary )!default;
+$badge-primary-bg-A:alpha($brand-primary )!default;
+
+$badge-success-bg:$brand-success ;
+$badge-success-bg-R:red($brand-success )!default;
+$badge-success-bg-G:green($brand-success )!default;
+$badge-success-bg-B:blue($brand-success )!default;
+$badge-success-bg-H:hue($brand-success )!default;
+$badge-success-bg-S:saturation($brand-success )!default;
+$badge-success-bg-L:lightness($brand-success )!default;
+$badge-success-bg-A:alpha($brand-success )!default;
+
+$badge-info-bg:$brand-info ;
+$badge-info-bg-R:red($brand-info )!default;
+$badge-info-bg-G:green($brand-info )!default;
+$badge-info-bg-B:blue($brand-info )!default;
+$badge-info-bg-H:hue($brand-info )!default;
+$badge-info-bg-S:saturation($brand-info )!default;
+$badge-info-bg-L:lightness($brand-info )!default;
+$badge-info-bg-A:alpha($brand-info )!default;
+
+$badge-warning-bg:$brand-warning ;
+$badge-warning-bg-R:red($brand-warning )!default;
+$badge-warning-bg-G:green($brand-warning )!default;
+$badge-warning-bg-B:blue($brand-warning )!default;
+$badge-warning-bg-H:hue($brand-warning )!default;
+$badge-warning-bg-S:saturation($brand-warning )!default;
+$badge-warning-bg-L:lightness($brand-warning )!default;
+$badge-warning-bg-A:alpha($brand-warning )!default;
+
+$badge-danger-bg:$brand-danger ;
+$badge-danger-bg-R:red($brand-danger )!default;
+$badge-danger-bg-G:green($brand-danger )!default;
+$badge-danger-bg-B:blue($brand-danger )!default;
+$badge-danger-bg-H:hue($brand-danger )!default;
+$badge-danger-bg-S:saturation($brand-danger )!default;
+$badge-danger-bg-L:lightness($brand-danger )!default;
+$badge-danger-bg-A:alpha($brand-danger )!default;
+
+
+$badge-color:$white ;
+$badge-color-R:red($white )!default;
+$badge-color-G:green($white )!default;
+$badge-color-B:blue($white )!default;
+$badge-color-H:hue($white )!default;
+$badge-color-S:saturation($white )!default;
+$badge-color-L:lightness($white )!default;
+$badge-color-A:alpha($white )!default;
+
+$badge-link-hover-color:$white ;
+$badge-link-hover-color-R:red($white )!default;
+$badge-link-hover-color-G:green($white )!default;
+$badge-link-hover-color-B:blue($white )!default;
+$badge-link-hover-color-H:hue($white )!default;
+$badge-link-hover-color-S:saturation($white )!default;
+$badge-link-hover-color-L:lightness($white )!default;
+$badge-link-hover-color-A:alpha($white )!default;
+
+$badge-font-size:75% ;
+
+$badge-font-weight:$font-weight-bold ;
+$badge-font-weight-R:red($font-weight-bold )!default;
+$badge-font-weight-G:green($font-weight-bold )!default;
+$badge-font-weight-B:blue($font-weight-bold )!default;
+$badge-font-weight-H:hue($font-weight-bold )!default;
+$badge-font-weight-S:saturation($font-weight-bold )!default;
+$badge-font-weight-L:lightness($font-weight-bold )!default;
+$badge-font-weight-A:alpha($font-weight-bold )!default;
+
+$badge-padding-x:.4em ;
+
+$badge-padding-y:.25em ;
+
+
+$badge-pill-padding-x:.6em ;
+
+// Use a higher than normal value to ensure completely rounded edges when
+// customizing padding or font-size on labels.
+$badge-pill-border-radius:10rem ;
+
+
+
+// Modals
+
+// Padding applied to the modal body
+$modal-inner-padding:15px ;
+
+
+$modal-dialog-margin:10px ;
+
+$modal-dialog-sm-up-margin-y:30px ;
+
+
+$modal-title-line-height:$line-height-base ;
+$modal-title-line-height-R:red($line-height-base )!default;
+$modal-title-line-height-G:green($line-height-base )!default;
+$modal-title-line-height-B:blue($line-height-base )!default;
+$modal-title-line-height-H:hue($line-height-base )!default;
+$modal-title-line-height-S:saturation($line-height-base )!default;
+$modal-title-line-height-L:lightness($line-height-base )!default;
+$modal-title-line-height-A:alpha($line-height-base )!default;
+
+
+$modal-content-bg:$white ;
+$modal-content-bg-R:red($white )!default;
+$modal-content-bg-G:green($white )!default;
+$modal-content-bg-B:blue($white )!default;
+$modal-content-bg-H:hue($white )!default;
+$modal-content-bg-S:saturation($white )!default;
+$modal-content-bg-L:lightness($white )!default;
+$modal-content-bg-A:alpha($white )!default;
+
+$modal-content-border-color:rgba($black,.2) ;
+$modal-content-border-color-R:red(rgba($black,.2) )!default;
+$modal-content-border-color-G:green(rgba($black,.2) )!default;
+$modal-content-border-color-B:blue(rgba($black,.2) )!default;
+$modal-content-border-color-H:hue(rgba($black,.2) )!default;
+$modal-content-border-color-S:saturation(rgba($black,.2) )!default;
+$modal-content-border-color-L:lightness(rgba($black,.2) )!default;
+$modal-content-border-color-A:alpha(rgba($black,.2) )!default;
+
+$modal-content-border-width:$border-width ;
+$modal-content-border-width-R:red($border-width )!default;
+$modal-content-border-width-G:green($border-width )!default;
+$modal-content-border-width-B:blue($border-width )!default;
+$modal-content-border-width-H:hue($border-width )!default;
+$modal-content-border-width-S:saturation($border-width )!default;
+$modal-content-border-width-L:lightness($border-width )!default;
+$modal-content-border-width-A:alpha($border-width )!default;
+
+$modal-content-xs-box-shadow:0 3px 9px rgba($black,.5) ;
+$modal-content-xs-box-shadow-R:red(0 3px 9px rgba($black,.5) )!default;
+$modal-content-xs-box-shadow-G:green(0 3px 9px rgba($black,.5) )!default;
+$modal-content-xs-box-shadow-B:blue(0 3px 9px rgba($black,.5) )!default;
+$modal-content-xs-box-shadow-H:hue(0 3px 9px rgba($black,.5) )!default;
+$modal-content-xs-box-shadow-S:saturation(0 3px 9px rgba($black,.5) )!default;
+$modal-content-xs-box-shadow-L:lightness(0 3px 9px rgba($black,.5) )!default;
+$modal-content-xs-box-shadow-A:alpha(0 3px 9px rgba($black,.5) )!default;
+
+$modal-content-sm-up-box-shadow:0 5px 15px rgba($black,.5) ;
+$modal-content-sm-up-box-shadow-R:red(0 5px 15px rgba($black,.5) )!default;
+$modal-content-sm-up-box-shadow-G:green(0 5px 15px rgba($black,.5) )!default;
+$modal-content-sm-up-box-shadow-B:blue(0 5px 15px rgba($black,.5) )!default;
+$modal-content-sm-up-box-shadow-H:hue(0 5px 15px rgba($black,.5) )!default;
+$modal-content-sm-up-box-shadow-S:saturation(0 5px 15px rgba($black,.5) )!default;
+$modal-content-sm-up-box-shadow-L:lightness(0 5px 15px rgba($black,.5) )!default;
+$modal-content-sm-up-box-shadow-A:alpha(0 5px 15px rgba($black,.5) )!default;
+
+
+$modal-backdrop-bg:$black ;
+$modal-backdrop-bg-R:red($black )!default;
+$modal-backdrop-bg-G:green($black )!default;
+$modal-backdrop-bg-B:blue($black )!default;
+$modal-backdrop-bg-H:hue($black )!default;
+$modal-backdrop-bg-S:saturation($black )!default;
+$modal-backdrop-bg-L:lightness($black )!default;
+$modal-backdrop-bg-A:alpha($black )!default;
+
+$modal-backdrop-opacity:.5 ;
+
+$modal-header-border-color:$gray-lighter ;
+$modal-header-border-color-R:red($gray-lighter )!default;
+$modal-header-border-color-G:green($gray-lighter )!default;
+$modal-header-border-color-B:blue($gray-lighter )!default;
+$modal-header-border-color-H:hue($gray-lighter )!default;
+$modal-header-border-color-S:saturation($gray-lighter )!default;
+$modal-header-border-color-L:lightness($gray-lighter )!default;
+$modal-header-border-color-A:alpha($gray-lighter )!default;
+
+$modal-footer-border-color:$modal-header-border-color ;
+$modal-footer-border-color-R:red($modal-header-border-color )!default;
+$modal-footer-border-color-G:green($modal-header-border-color )!default;
+$modal-footer-border-color-B:blue($modal-header-border-color )!default;
+$modal-footer-border-color-H:hue($modal-header-border-color )!default;
+$modal-footer-border-color-S:saturation($modal-header-border-color )!default;
+$modal-footer-border-color-L:lightness($modal-header-border-color )!default;
+$modal-footer-border-color-A:alpha($modal-header-border-color )!default;
+
+$modal-header-border-width:$modal-content-border-width ;
+$modal-header-border-width-R:red($modal-content-border-width )!default;
+$modal-header-border-width-G:green($modal-content-border-width )!default;
+$modal-header-border-width-B:blue($modal-content-border-width )!default;
+$modal-header-border-width-H:hue($modal-content-border-width )!default;
+$modal-header-border-width-S:saturation($modal-content-border-width )!default;
+$modal-header-border-width-L:lightness($modal-content-border-width )!default;
+$modal-header-border-width-A:alpha($modal-content-border-width )!default;
+
+$modal-footer-border-width:$modal-header-border-width ;
+$modal-footer-border-width-R:red($modal-header-border-width )!default;
+$modal-footer-border-width-G:green($modal-header-border-width )!default;
+$modal-footer-border-width-B:blue($modal-header-border-width )!default;
+$modal-footer-border-width-H:hue($modal-header-border-width )!default;
+$modal-footer-border-width-S:saturation($modal-header-border-width )!default;
+$modal-footer-border-width-L:lightness($modal-header-border-width )!default;
+$modal-footer-border-width-A:alpha($modal-header-border-width )!default;
+
+$modal-header-padding:15px ;
+
+
+$modal-lg:800px ;
+
+$modal-md:500px ;
+
+$modal-sm:300px ;
+
+
+$modal-transition:transform .3s ease-out ;
+
+
+
+// Alerts
+//
+// Define alert colors, border radius, and padding.
+
+$alert-padding-x:1.25rem ;
+
+$alert-padding-y:.75rem ;
+
+$alert-margin-bottom:$spacer-y ;
+$alert-margin-bottom-R:red($spacer-y )!default;
+$alert-margin-bottom-G:green($spacer-y )!default;
+$alert-margin-bottom-B:blue($spacer-y )!default;
+$alert-margin-bottom-H:hue($spacer-y )!default;
+$alert-margin-bottom-S:saturation($spacer-y )!default;
+$alert-margin-bottom-L:lightness($spacer-y )!default;
+$alert-margin-bottom-A:alpha($spacer-y )!default;
+
+$alert-border-radius:$border-radius ;
+$alert-border-radius-R:red($border-radius )!default;
+$alert-border-radius-G:green($border-radius )!default;
+$alert-border-radius-B:blue($border-radius )!default;
+$alert-border-radius-H:hue($border-radius )!default;
+$alert-border-radius-S:saturation($border-radius )!default;
+$alert-border-radius-L:lightness($border-radius )!default;
+$alert-border-radius-A:alpha($border-radius )!default;
+
+$alert-link-font-weight:$font-weight-bold ;
+$alert-link-font-weight-R:red($font-weight-bold )!default;
+$alert-link-font-weight-G:green($font-weight-bold )!default;
+$alert-link-font-weight-B:blue($font-weight-bold )!default;
+$alert-link-font-weight-H:hue($font-weight-bold )!default;
+$alert-link-font-weight-S:saturation($font-weight-bold )!default;
+$alert-link-font-weight-L:lightness($font-weight-bold )!default;
+$alert-link-font-weight-A:alpha($font-weight-bold )!default;
+
+$alert-border-width:$border-width ;
+$alert-border-width-R:red($border-width )!default;
+$alert-border-width-G:green($border-width )!default;
+$alert-border-width-B:blue($border-width )!default;
+$alert-border-width-H:hue($border-width )!default;
+$alert-border-width-S:saturation($border-width )!default;
+$alert-border-width-L:lightness($border-width )!default;
+$alert-border-width-A:alpha($border-width )!default;
+
+
+$alert-success-bg:$state-success-bg ;
+$alert-success-bg-R:red($state-success-bg )!default;
+$alert-success-bg-G:green($state-success-bg )!default;
+$alert-success-bg-B:blue($state-success-bg )!default;
+$alert-success-bg-H:hue($state-success-bg )!default;
+$alert-success-bg-S:saturation($state-success-bg )!default;
+$alert-success-bg-L:lightness($state-success-bg )!default;
+$alert-success-bg-A:alpha($state-success-bg )!default;
+
+$alert-success-text:$state-success-text ;
+$alert-success-text-R:red($state-success-text )!default;
+$alert-success-text-G:green($state-success-text )!default;
+$alert-success-text-B:blue($state-success-text )!default;
+$alert-success-text-H:hue($state-success-text )!default;
+$alert-success-text-S:saturation($state-success-text )!default;
+$alert-success-text-L:lightness($state-success-text )!default;
+$alert-success-text-A:alpha($state-success-text )!default;
+
+$alert-success-border:$state-success-border ;
+$alert-success-border-R:red($state-success-border )!default;
+$alert-success-border-G:green($state-success-border )!default;
+$alert-success-border-B:blue($state-success-border )!default;
+$alert-success-border-H:hue($state-success-border )!default;
+$alert-success-border-S:saturation($state-success-border )!default;
+$alert-success-border-L:lightness($state-success-border )!default;
+$alert-success-border-A:alpha($state-success-border )!default;
+
+
+$alert-info-bg:$state-info-bg ;
+$alert-info-bg-R:red($state-info-bg )!default;
+$alert-info-bg-G:green($state-info-bg )!default;
+$alert-info-bg-B:blue($state-info-bg )!default;
+$alert-info-bg-H:hue($state-info-bg )!default;
+$alert-info-bg-S:saturation($state-info-bg )!default;
+$alert-info-bg-L:lightness($state-info-bg )!default;
+$alert-info-bg-A:alpha($state-info-bg )!default;
+
+$alert-info-text:$state-info-text ;
+$alert-info-text-R:red($state-info-text )!default;
+$alert-info-text-G:green($state-info-text )!default;
+$alert-info-text-B:blue($state-info-text )!default;
+$alert-info-text-H:hue($state-info-text )!default;
+$alert-info-text-S:saturation($state-info-text )!default;
+$alert-info-text-L:lightness($state-info-text )!default;
+$alert-info-text-A:alpha($state-info-text )!default;
+
+$alert-info-border:$state-info-border ;
+$alert-info-border-R:red($state-info-border )!default;
+$alert-info-border-G:green($state-info-border )!default;
+$alert-info-border-B:blue($state-info-border )!default;
+$alert-info-border-H:hue($state-info-border )!default;
+$alert-info-border-S:saturation($state-info-border )!default;
+$alert-info-border-L:lightness($state-info-border )!default;
+$alert-info-border-A:alpha($state-info-border )!default;
+
+
+$alert-warning-bg:$state-warning-bg ;
+$alert-warning-bg-R:red($state-warning-bg )!default;
+$alert-warning-bg-G:green($state-warning-bg )!default;
+$alert-warning-bg-B:blue($state-warning-bg )!default;
+$alert-warning-bg-H:hue($state-warning-bg )!default;
+$alert-warning-bg-S:saturation($state-warning-bg )!default;
+$alert-warning-bg-L:lightness($state-warning-bg )!default;
+$alert-warning-bg-A:alpha($state-warning-bg )!default;
+
+$alert-warning-text:$state-warning-text ;
+$alert-warning-text-R:red($state-warning-text )!default;
+$alert-warning-text-G:green($state-warning-text )!default;
+$alert-warning-text-B:blue($state-warning-text )!default;
+$alert-warning-text-H:hue($state-warning-text )!default;
+$alert-warning-text-S:saturation($state-warning-text )!default;
+$alert-warning-text-L:lightness($state-warning-text )!default;
+$alert-warning-text-A:alpha($state-warning-text )!default;
+
+$alert-warning-border:$state-warning-border ;
+$alert-warning-border-R:red($state-warning-border )!default;
+$alert-warning-border-G:green($state-warning-border )!default;
+$alert-warning-border-B:blue($state-warning-border )!default;
+$alert-warning-border-H:hue($state-warning-border )!default;
+$alert-warning-border-S:saturation($state-warning-border )!default;
+$alert-warning-border-L:lightness($state-warning-border )!default;
+$alert-warning-border-A:alpha($state-warning-border )!default;
+
+
+$alert-danger-bg:$state-danger-bg ;
+$alert-danger-bg-R:red($state-danger-bg )!default;
+$alert-danger-bg-G:green($state-danger-bg )!default;
+$alert-danger-bg-B:blue($state-danger-bg )!default;
+$alert-danger-bg-H:hue($state-danger-bg )!default;
+$alert-danger-bg-S:saturation($state-danger-bg )!default;
+$alert-danger-bg-L:lightness($state-danger-bg )!default;
+$alert-danger-bg-A:alpha($state-danger-bg )!default;
+
+$alert-danger-text:$state-danger-text ;
+$alert-danger-text-R:red($state-danger-text )!default;
+$alert-danger-text-G:green($state-danger-text )!default;
+$alert-danger-text-B:blue($state-danger-text )!default;
+$alert-danger-text-H:hue($state-danger-text )!default;
+$alert-danger-text-S:saturation($state-danger-text )!default;
+$alert-danger-text-L:lightness($state-danger-text )!default;
+$alert-danger-text-A:alpha($state-danger-text )!default;
+
+$alert-danger-border:$state-danger-border ;
+$alert-danger-border-R:red($state-danger-border )!default;
+$alert-danger-border-G:green($state-danger-border )!default;
+$alert-danger-border-B:blue($state-danger-border )!default;
+$alert-danger-border-H:hue($state-danger-border )!default;
+$alert-danger-border-S:saturation($state-danger-border )!default;
+$alert-danger-border-L:lightness($state-danger-border )!default;
+$alert-danger-border-A:alpha($state-danger-border )!default;
+
+
+
+// Progress bars
+
+$progress-height:1rem ;
+
+$progress-font-size:.75rem ;
+
+$progress-bg:$gray-lighter ;
+$progress-bg-R:red($gray-lighter )!default;
+$progress-bg-G:green($gray-lighter )!default;
+$progress-bg-B:blue($gray-lighter )!default;
+$progress-bg-H:hue($gray-lighter )!default;
+$progress-bg-S:saturation($gray-lighter )!default;
+$progress-bg-L:lightness($gray-lighter )!default;
+$progress-bg-A:alpha($gray-lighter )!default;
+
+$progress-border-radius:$border-radius ;
+$progress-border-radius-R:red($border-radius )!default;
+$progress-border-radius-G:green($border-radius )!default;
+$progress-border-radius-B:blue($border-radius )!default;
+$progress-border-radius-H:hue($border-radius )!default;
+$progress-border-radius-S:saturation($border-radius )!default;
+$progress-border-radius-L:lightness($border-radius )!default;
+$progress-border-radius-A:alpha($border-radius )!default;
+
+$progress-box-shadow:inset 0 .1rem .1rem rgba($black,.1) ;
+$progress-box-shadow-R:red(inset 0 .1rem .1rem rgba($black,.1) )!default;
+$progress-box-shadow-G:green(inset 0 .1rem .1rem rgba($black,.1) )!default;
+$progress-box-shadow-B:blue(inset 0 .1rem .1rem rgba($black,.1) )!default;
+$progress-box-shadow-H:hue(inset 0 .1rem .1rem rgba($black,.1) )!default;
+$progress-box-shadow-S:saturation(inset 0 .1rem .1rem rgba($black,.1) )!default;
+$progress-box-shadow-L:lightness(inset 0 .1rem .1rem rgba($black,.1) )!default;
+$progress-box-shadow-A:alpha(inset 0 .1rem .1rem rgba($black,.1) )!default;
+
+$progress-bar-color:$white ;
+$progress-bar-color-R:red($white )!default;
+$progress-bar-color-G:green($white )!default;
+$progress-bar-color-B:blue($white )!default;
+$progress-bar-color-H:hue($white )!default;
+$progress-bar-color-S:saturation($white )!default;
+$progress-bar-color-L:lightness($white )!default;
+$progress-bar-color-A:alpha($white )!default;
+
+$progress-bar-bg:$brand-primary ;
+$progress-bar-bg-R:red($brand-primary )!default;
+$progress-bar-bg-G:green($brand-primary )!default;
+$progress-bar-bg-B:blue($brand-primary )!default;
+$progress-bar-bg-H:hue($brand-primary )!default;
+$progress-bar-bg-S:saturation($brand-primary )!default;
+$progress-bar-bg-L:lightness($brand-primary )!default;
+$progress-bar-bg-A:alpha($brand-primary )!default;
+
+$progress-bar-animation-timing:1s linear infinite ;
+
+
+// List group
+
+$list-group-color:$body-color ;
+$list-group-color-R:red($body-color )!default;
+$list-group-color-G:green($body-color )!default;
+$list-group-color-B:blue($body-color )!default;
+$list-group-color-H:hue($body-color )!default;
+$list-group-color-S:saturation($body-color )!default;
+$list-group-color-L:lightness($body-color )!default;
+$list-group-color-A:alpha($body-color )!default;
+
+$list-group-bg:$white ;
+$list-group-bg-R:red($white )!default;
+$list-group-bg-G:green($white )!default;
+$list-group-bg-B:blue($white )!default;
+$list-group-bg-H:hue($white )!default;
+$list-group-bg-S:saturation($white )!default;
+$list-group-bg-L:lightness($white )!default;
+$list-group-bg-A:alpha($white )!default;
+
+$list-group-border-color:rgba($black,.125) ;
+$list-group-border-color-R:red(rgba($black,.125) )!default;
+$list-group-border-color-G:green(rgba($black,.125) )!default;
+$list-group-border-color-B:blue(rgba($black,.125) )!default;
+$list-group-border-color-H:hue(rgba($black,.125) )!default;
+$list-group-border-color-S:saturation(rgba($black,.125) )!default;
+$list-group-border-color-L:lightness(rgba($black,.125) )!default;
+$list-group-border-color-A:alpha(rgba($black,.125) )!default;
+
+$list-group-border-width:$border-width ;
+$list-group-border-width-R:red($border-width )!default;
+$list-group-border-width-G:green($border-width )!default;
+$list-group-border-width-B:blue($border-width )!default;
+$list-group-border-width-H:hue($border-width )!default;
+$list-group-border-width-S:saturation($border-width )!default;
+$list-group-border-width-L:lightness($border-width )!default;
+$list-group-border-width-A:alpha($border-width )!default;
+
+$list-group-border-radius:$border-radius ;
+$list-group-border-radius-R:red($border-radius )!default;
+$list-group-border-radius-G:green($border-radius )!default;
+$list-group-border-radius-B:blue($border-radius )!default;
+$list-group-border-radius-H:hue($border-radius )!default;
+$list-group-border-radius-S:saturation($border-radius )!default;
+$list-group-border-radius-L:lightness($border-radius )!default;
+$list-group-border-radius-A:alpha($border-radius )!default;
+
+
+$list-group-item-padding-x:1.25rem ;
+
+$list-group-item-padding-y:.75rem ;
+
+
+$list-group-hover-bg:$gray-lightest ;
+$list-group-hover-bg-R:red($gray-lightest )!default;
+$list-group-hover-bg-G:green($gray-lightest )!default;
+$list-group-hover-bg-B:blue($gray-lightest )!default;
+$list-group-hover-bg-H:hue($gray-lightest )!default;
+$list-group-hover-bg-S:saturation($gray-lightest )!default;
+$list-group-hover-bg-L:lightness($gray-lightest )!default;
+$list-group-hover-bg-A:alpha($gray-lightest )!default;
+
+$list-group-active-color:$component-active-color ;
+$list-group-active-color-R:red($component-active-color )!default;
+$list-group-active-color-G:green($component-active-color )!default;
+$list-group-active-color-B:blue($component-active-color )!default;
+$list-group-active-color-H:hue($component-active-color )!default;
+$list-group-active-color-S:saturation($component-active-color )!default;
+$list-group-active-color-L:lightness($component-active-color )!default;
+$list-group-active-color-A:alpha($component-active-color )!default;
+
+$list-group-active-bg:$component-active-bg ;
+$list-group-active-bg-R:red($component-active-bg )!default;
+$list-group-active-bg-G:green($component-active-bg )!default;
+$list-group-active-bg-B:blue($component-active-bg )!default;
+$list-group-active-bg-H:hue($component-active-bg )!default;
+$list-group-active-bg-S:saturation($component-active-bg )!default;
+$list-group-active-bg-L:lightness($component-active-bg )!default;
+$list-group-active-bg-A:alpha($component-active-bg )!default;
+
+$list-group-active-border:$list-group-active-bg ;
+$list-group-active-border-R:red($list-group-active-bg )!default;
+$list-group-active-border-G:green($list-group-active-bg )!default;
+$list-group-active-border-B:blue($list-group-active-bg )!default;
+$list-group-active-border-H:hue($list-group-active-bg )!default;
+$list-group-active-border-S:saturation($list-group-active-bg )!default;
+$list-group-active-border-L:lightness($list-group-active-bg )!default;
+$list-group-active-border-A:alpha($list-group-active-bg )!default;
+
+$list-group-active-text-color:lighten($list-group-active-bg, 50%) ;
+$list-group-active-text-color-R:red(lighten($list-group-active-bg, 50%) )!default;
+$list-group-active-text-color-G:green(lighten($list-group-active-bg, 50%) )!default;
+$list-group-active-text-color-B:blue(lighten($list-group-active-bg, 50%) )!default;
+$list-group-active-text-color-H:hue(lighten($list-group-active-bg, 50%) )!default;
+$list-group-active-text-color-S:saturation(lighten($list-group-active-bg, 50%) )!default;
+$list-group-active-text-color-L:lightness(lighten($list-group-active-bg, 50%) )!default;
+$list-group-active-text-color-A:alpha(lighten($list-group-active-bg, 50%) )!default;
+
+
+$list-group-disabled-color:$gray-light ;
+$list-group-disabled-color-R:red($gray-light )!default;
+$list-group-disabled-color-G:green($gray-light )!default;
+$list-group-disabled-color-B:blue($gray-light )!default;
+$list-group-disabled-color-H:hue($gray-light )!default;
+$list-group-disabled-color-S:saturation($gray-light )!default;
+$list-group-disabled-color-L:lightness($gray-light )!default;
+$list-group-disabled-color-A:alpha($gray-light )!default;
+
+$list-group-disabled-bg:$list-group-bg ;
+$list-group-disabled-bg-R:red($list-group-bg )!default;
+$list-group-disabled-bg-G:green($list-group-bg )!default;
+$list-group-disabled-bg-B:blue($list-group-bg )!default;
+$list-group-disabled-bg-H:hue($list-group-bg )!default;
+$list-group-disabled-bg-S:saturation($list-group-bg )!default;
+$list-group-disabled-bg-L:lightness($list-group-bg )!default;
+$list-group-disabled-bg-A:alpha($list-group-bg )!default;
+
+$list-group-disabled-text-color:$list-group-disabled-color ;
+$list-group-disabled-text-color-R:red($list-group-disabled-color )!default;
+$list-group-disabled-text-color-G:green($list-group-disabled-color )!default;
+$list-group-disabled-text-color-B:blue($list-group-disabled-color )!default;
+$list-group-disabled-text-color-H:hue($list-group-disabled-color )!default;
+$list-group-disabled-text-color-S:saturation($list-group-disabled-color )!default;
+$list-group-disabled-text-color-L:lightness($list-group-disabled-color )!default;
+$list-group-disabled-text-color-A:alpha($list-group-disabled-color )!default;
+
+
+$list-group-link-color:$gray ;
+$list-group-link-color-R:red($gray )!default;
+$list-group-link-color-G:green($gray )!default;
+$list-group-link-color-B:blue($gray )!default;
+$list-group-link-color-H:hue($gray )!default;
+$list-group-link-color-S:saturation($gray )!default;
+$list-group-link-color-L:lightness($gray )!default;
+$list-group-link-color-A:alpha($gray )!default;
+
+$list-group-link-heading-color:$gray-dark ;
+$list-group-link-heading-color-R:red($gray-dark )!default;
+$list-group-link-heading-color-G:green($gray-dark )!default;
+$list-group-link-heading-color-B:blue($gray-dark )!default;
+$list-group-link-heading-color-H:hue($gray-dark )!default;
+$list-group-link-heading-color-S:saturation($gray-dark )!default;
+$list-group-link-heading-color-L:lightness($gray-dark )!default;
+$list-group-link-heading-color-A:alpha($gray-dark )!default;
+
+$list-group-link-hover-color:$list-group-link-color ;
+$list-group-link-hover-color-R:red($list-group-link-color )!default;
+$list-group-link-hover-color-G:green($list-group-link-color )!default;
+$list-group-link-hover-color-B:blue($list-group-link-color )!default;
+$list-group-link-hover-color-H:hue($list-group-link-color )!default;
+$list-group-link-hover-color-S:saturation($list-group-link-color )!default;
+$list-group-link-hover-color-L:lightness($list-group-link-color )!default;
+$list-group-link-hover-color-A:alpha($list-group-link-color )!default;
+
+
+$list-group-link-active-color:$list-group-color ;
+$list-group-link-active-color-R:red($list-group-color )!default;
+$list-group-link-active-color-G:green($list-group-color )!default;
+$list-group-link-active-color-B:blue($list-group-color )!default;
+$list-group-link-active-color-H:hue($list-group-color )!default;
+$list-group-link-active-color-S:saturation($list-group-color )!default;
+$list-group-link-active-color-L:lightness($list-group-color )!default;
+$list-group-link-active-color-A:alpha($list-group-color )!default;
+
+$list-group-link-active-bg:$gray-lighter ;
+$list-group-link-active-bg-R:red($gray-lighter )!default;
+$list-group-link-active-bg-G:green($gray-lighter )!default;
+$list-group-link-active-bg-B:blue($gray-lighter )!default;
+$list-group-link-active-bg-H:hue($gray-lighter )!default;
+$list-group-link-active-bg-S:saturation($gray-lighter )!default;
+$list-group-link-active-bg-L:lightness($gray-lighter )!default;
+$list-group-link-active-bg-A:alpha($gray-lighter )!default;
+
+
+
+// Image thumbnails
+
+$thumbnail-padding:.25rem ;
+
+$thumbnail-bg:$body-bg ;
+$thumbnail-bg-R:red($body-bg )!default;
+$thumbnail-bg-G:green($body-bg )!default;
+$thumbnail-bg-B:blue($body-bg )!default;
+$thumbnail-bg-H:hue($body-bg )!default;
+$thumbnail-bg-S:saturation($body-bg )!default;
+$thumbnail-bg-L:lightness($body-bg )!default;
+$thumbnail-bg-A:alpha($body-bg )!default;
+
+$thumbnail-border-width:$border-width ;
+$thumbnail-border-width-R:red($border-width )!default;
+$thumbnail-border-width-G:green($border-width )!default;
+$thumbnail-border-width-B:blue($border-width )!default;
+$thumbnail-border-width-H:hue($border-width )!default;
+$thumbnail-border-width-S:saturation($border-width )!default;
+$thumbnail-border-width-L:lightness($border-width )!default;
+$thumbnail-border-width-A:alpha($border-width )!default;
+
+$thumbnail-border-color:#ddd ;
+$thumbnail-border-color-R:red(#ddd )!default;
+$thumbnail-border-color-G:green(#ddd )!default;
+$thumbnail-border-color-B:blue(#ddd )!default;
+$thumbnail-border-color-H:hue(#ddd )!default;
+$thumbnail-border-color-S:saturation(#ddd )!default;
+$thumbnail-border-color-L:lightness(#ddd )!default;
+$thumbnail-border-color-A:alpha(#ddd )!default;
+
+$thumbnail-border-radius:$border-radius ;
+$thumbnail-border-radius-R:red($border-radius )!default;
+$thumbnail-border-radius-G:green($border-radius )!default;
+$thumbnail-border-radius-B:blue($border-radius )!default;
+$thumbnail-border-radius-H:hue($border-radius )!default;
+$thumbnail-border-radius-S:saturation($border-radius )!default;
+$thumbnail-border-radius-L:lightness($border-radius )!default;
+$thumbnail-border-radius-A:alpha($border-radius )!default;
+
+$thumbnail-box-shadow:0 1px 2px rgba($black,.075) ;
+$thumbnail-box-shadow-R:red(0 1px 2px rgba($black,.075) )!default;
+$thumbnail-box-shadow-G:green(0 1px 2px rgba($black,.075) )!default;
+$thumbnail-box-shadow-B:blue(0 1px 2px rgba($black,.075) )!default;
+$thumbnail-box-shadow-H:hue(0 1px 2px rgba($black,.075) )!default;
+$thumbnail-box-shadow-S:saturation(0 1px 2px rgba($black,.075) )!default;
+$thumbnail-box-shadow-L:lightness(0 1px 2px rgba($black,.075) )!default;
+$thumbnail-box-shadow-A:alpha(0 1px 2px rgba($black,.075) )!default;
+
+$thumbnail-transition:all .2s ease-in-out ;
+
+
+
+// Figures
+
+$figure-caption-font-size:90% ;
+
+$figure-caption-color:$gray-light ;
+$figure-caption-color-R:red($gray-light )!default;
+$figure-caption-color-G:green($gray-light )!default;
+$figure-caption-color-B:blue($gray-light )!default;
+$figure-caption-color-H:hue($gray-light )!default;
+$figure-caption-color-S:saturation($gray-light )!default;
+$figure-caption-color-L:lightness($gray-light )!default;
+$figure-caption-color-A:alpha($gray-light )!default;
+
+
+
+// Breadcrumbs
+
+$breadcrumb-padding-y:.75rem ;
+
+$breadcrumb-padding-x:1rem ;
+
+$breadcrumb-item-padding:.5rem ;
+
+
+$breadcrumb-bg:$gray-lighter ;
+$breadcrumb-bg-R:red($gray-lighter )!default;
+$breadcrumb-bg-G:green($gray-lighter )!default;
+$breadcrumb-bg-B:blue($gray-lighter )!default;
+$breadcrumb-bg-H:hue($gray-lighter )!default;
+$breadcrumb-bg-S:saturation($gray-lighter )!default;
+$breadcrumb-bg-L:lightness($gray-lighter )!default;
+$breadcrumb-bg-A:alpha($gray-lighter )!default;
+
+$breadcrumb-divider-color:$gray-light ;
+$breadcrumb-divider-color-R:red($gray-light )!default;
+$breadcrumb-divider-color-G:green($gray-light )!default;
+$breadcrumb-divider-color-B:blue($gray-light )!default;
+$breadcrumb-divider-color-H:hue($gray-light )!default;
+$breadcrumb-divider-color-S:saturation($gray-light )!default;
+$breadcrumb-divider-color-L:lightness($gray-light )!default;
+$breadcrumb-divider-color-A:alpha($gray-light )!default;
+
+$breadcrumb-active-color:$gray-light ;
+$breadcrumb-active-color-R:red($gray-light )!default;
+$breadcrumb-active-color-G:green($gray-light )!default;
+$breadcrumb-active-color-B:blue($gray-light )!default;
+$breadcrumb-active-color-H:hue($gray-light )!default;
+$breadcrumb-active-color-S:saturation($gray-light )!default;
+$breadcrumb-active-color-L:lightness($gray-light )!default;
+$breadcrumb-active-color-A:alpha($gray-light )!default;
+
+$breadcrumb-divider:"/" ;
+
+
+
+// Carousel
+
+$carousel-control-color:$white ;
+$carousel-control-color-R:red($white )!default;
+$carousel-control-color-G:green($white )!default;
+$carousel-control-color-B:blue($white )!default;
+$carousel-control-color-H:hue($white )!default;
+$carousel-control-color-S:saturation($white )!default;
+$carousel-control-color-L:lightness($white )!default;
+$carousel-control-color-A:alpha($white )!default;
+
+$carousel-control-width:15% ;
+
+$carousel-control-opacity:.5 ;
+
+
+$carousel-indicator-width:30px ;
+
+$carousel-indicator-height:3px ;
+
+$carousel-indicator-spacer:3px ;
+
+$carousel-indicator-active-bg:$white ;
+$carousel-indicator-active-bg-R:red($white )!default;
+$carousel-indicator-active-bg-G:green($white )!default;
+$carousel-indicator-active-bg-B:blue($white )!default;
+$carousel-indicator-active-bg-H:hue($white )!default;
+$carousel-indicator-active-bg-S:saturation($white )!default;
+$carousel-indicator-active-bg-L:lightness($white )!default;
+$carousel-indicator-active-bg-A:alpha($white )!default;
+
+
+$carousel-caption-width:70% ;
+
+$carousel-caption-color:$white ;
+$carousel-caption-color-R:red($white )!default;
+$carousel-caption-color-G:green($white )!default;
+$carousel-caption-color-B:blue($white )!default;
+$carousel-caption-color-H:hue($white )!default;
+$carousel-caption-color-S:saturation($white )!default;
+$carousel-caption-color-L:lightness($white )!default;
+$carousel-caption-color-A:alpha($white )!default;
+
+
+$carousel-control-icon-width:20px ;
+
+
+$carousel-control-prev-icon-bg:str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{$carousel-control-color' viewBox='0 0 8 8'%3E%3Cpath d='M4 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E"), "#", "%23") ;
+$carousel-control-prev-icon-bg-R:red(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{$carousel-control-color' viewBox='0 0 8 8'%3E%3Cpath d='M4 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$carousel-control-prev-icon-bg-G:green(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{$carousel-control-color' viewBox='0 0 8 8'%3E%3Cpath d='M4 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$carousel-control-prev-icon-bg-B:blue(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{$carousel-control-color' viewBox='0 0 8 8'%3E%3Cpath d='M4 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$carousel-control-prev-icon-bg-H:hue(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{$carousel-control-color' viewBox='0 0 8 8'%3E%3Cpath d='M4 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$carousel-control-prev-icon-bg-S:saturation(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{$carousel-control-color' viewBox='0 0 8 8'%3E%3Cpath d='M4 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$carousel-control-prev-icon-bg-L:lightness(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{$carousel-control-color' viewBox='0 0 8 8'%3E%3Cpath d='M4 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$carousel-control-prev-icon-bg-A:alpha(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{$carousel-control-color' viewBox='0 0 8 8'%3E%3Cpath d='M4 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+
+$carousel-control-next-icon-bg:str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{$carousel-control-color' viewBox='0 0 8 8'%3E%3Cpath d='M1.5 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E"), "#", "%23") ;
+$carousel-control-next-icon-bg-R:red(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{$carousel-control-color' viewBox='0 0 8 8'%3E%3Cpath d='M1.5 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$carousel-control-next-icon-bg-G:green(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{$carousel-control-color' viewBox='0 0 8 8'%3E%3Cpath d='M1.5 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$carousel-control-next-icon-bg-B:blue(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{$carousel-control-color' viewBox='0 0 8 8'%3E%3Cpath d='M1.5 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$carousel-control-next-icon-bg-H:hue(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{$carousel-control-color' viewBox='0 0 8 8'%3E%3Cpath d='M1.5 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$carousel-control-next-icon-bg-S:saturation(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{$carousel-control-color' viewBox='0 0 8 8'%3E%3Cpath d='M1.5 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$carousel-control-next-icon-bg-L:lightness(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{$carousel-control-color' viewBox='0 0 8 8'%3E%3Cpath d='M1.5 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+$carousel-control-next-icon-bg-A:alpha(str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{$carousel-control-color' viewBox='0 0 8 8'%3E%3Cpath d='M1.5 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E"), "#", "%23") )!default;
+
+
+$carousel-transition:transform .6s ease-in-out ;
+
+
+
+// Close
+
+$close-font-size:$font-size-base * 1.5 ;
+$close-font-size-R:red($font-size-base * 1.5 )!default;
+$close-font-size-G:green($font-size-base * 1.5 )!default;
+$close-font-size-B:blue($font-size-base * 1.5 )!default;
+$close-font-size-H:hue($font-size-base * 1.5 )!default;
+$close-font-size-S:saturation($font-size-base * 1.5 )!default;
+$close-font-size-L:lightness($font-size-base * 1.5 )!default;
+$close-font-size-A:alpha($font-size-base * 1.5 )!default;
+
+$close-font-weight:$font-weight-bold ;
+$close-font-weight-R:red($font-weight-bold )!default;
+$close-font-weight-G:green($font-weight-bold )!default;
+$close-font-weight-B:blue($font-weight-bold )!default;
+$close-font-weight-H:hue($font-weight-bold )!default;
+$close-font-weight-S:saturation($font-weight-bold )!default;
+$close-font-weight-L:lightness($font-weight-bold )!default;
+$close-font-weight-A:alpha($font-weight-bold )!default;
+
+$close-color:$black ;
+$close-color-R:red($black )!default;
+$close-color-G:green($black )!default;
+$close-color-B:blue($black )!default;
+$close-color-H:hue($black )!default;
+$close-color-S:saturation($black )!default;
+$close-color-L:lightness($black )!default;
+$close-color-A:alpha($black )!default;
+
+$close-text-shadow:0 1px 0 $white ;
+$close-text-shadow-R:red(0 1px 0 $white )!default;
+$close-text-shadow-G:green(0 1px 0 $white )!default;
+$close-text-shadow-B:blue(0 1px 0 $white )!default;
+$close-text-shadow-H:hue(0 1px 0 $white )!default;
+$close-text-shadow-S:saturation(0 1px 0 $white )!default;
+$close-text-shadow-L:lightness(0 1px 0 $white )!default;
+$close-text-shadow-A:alpha(0 1px 0 $white )!default;
+
+
+
+// Code
+
+$code-font-size:90% ;
+
+$code-padding-x:.4rem ;
+
+$code-padding-y:.2rem ;
+
+$code-color:#bd4147 ;
+$code-color-R:red(#bd4147 )!default;
+$code-color-G:green(#bd4147 )!default;
+$code-color-B:blue(#bd4147 )!default;
+$code-color-H:hue(#bd4147 )!default;
+$code-color-S:saturation(#bd4147 )!default;
+$code-color-L:lightness(#bd4147 )!default;
+$code-color-A:alpha(#bd4147 )!default;
+
+$code-bg:$gray-lightest ;
+$code-bg-R:red($gray-lightest )!default;
+$code-bg-G:green($gray-lightest )!default;
+$code-bg-B:blue($gray-lightest )!default;
+$code-bg-H:hue($gray-lightest )!default;
+$code-bg-S:saturation($gray-lightest )!default;
+$code-bg-L:lightness($gray-lightest )!default;
+$code-bg-A:alpha($gray-lightest )!default;
+
+
+$kbd-color:$white ;
+$kbd-color-R:red($white )!default;
+$kbd-color-G:green($white )!default;
+$kbd-color-B:blue($white )!default;
+$kbd-color-H:hue($white )!default;
+$kbd-color-S:saturation($white )!default;
+$kbd-color-L:lightness($white )!default;
+$kbd-color-A:alpha($white )!default;
+
+$kbd-bg:$gray-dark ;
+$kbd-bg-R:red($gray-dark )!default;
+$kbd-bg-G:green($gray-dark )!default;
+$kbd-bg-B:blue($gray-dark )!default;
+$kbd-bg-H:hue($gray-dark )!default;
+$kbd-bg-S:saturation($gray-dark )!default;
+$kbd-bg-L:lightness($gray-dark )!default;
+$kbd-bg-A:alpha($gray-dark )!default;
+
+
+$pre-bg:$gray-lightest ;
+$pre-bg-R:red($gray-lightest )!default;
+$pre-bg-G:green($gray-lightest )!default;
+$pre-bg-B:blue($gray-lightest )!default;
+$pre-bg-H:hue($gray-lightest )!default;
+$pre-bg-S:saturation($gray-lightest )!default;
+$pre-bg-L:lightness($gray-lightest )!default;
+$pre-bg-A:alpha($gray-lightest )!default;
+
+$pre-color:$gray-dark ;
+$pre-color-R:red($gray-dark )!default;
+$pre-color-G:green($gray-dark )!default;
+$pre-color-B:blue($gray-dark )!default;
+$pre-color-H:hue($gray-dark )!default;
+$pre-color-S:saturation($gray-dark )!default;
+$pre-color-L:lightness($gray-dark )!default;
+$pre-color-A:alpha($gray-dark )!default;
+
+$pre-border-color:#ccc ;
+$pre-border-color-R:red(#ccc )!default;
+$pre-border-color-G:green(#ccc )!default;
+$pre-border-color-B:blue(#ccc )!default;
+$pre-border-color-H:hue(#ccc )!default;
+$pre-border-color-S:saturation(#ccc )!default;
+$pre-border-color-L:lightness(#ccc )!default;
+$pre-border-color-A:alpha(#ccc )!default;
+
+$pre-scrollable-max-height:340px ;
+

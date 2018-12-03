@@ -1,0 +1,12 @@
+{
+  "extends": "standard",
+  "rules": {
+    "prettier/prettier": [
+      "error",
+      {
+        "printWidth": 120,
+        "useTabs": false
+      }
+    ]
+  }
+}
